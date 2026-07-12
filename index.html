@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nova Flora — Creative AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#17192d;--ink:#22263a;--muted:#7f879c;--lav:#d8d5ff;--mint:#c9f0e3;--line:rgba(42,47,75,.09);--glass:rgba(255,255,255,.64)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#dfe5f6;overflow:hidden;font-size:12px}button,input{font:inherit;color:inherit}button{cursor:pointer}
+.world{position:fixed;inset:0;overflow:hidden;background:linear-gradient(125deg,#d9dcfa 0%,#edf7fb 44%,#ece7f6 100%)}
+.world:before,.world:after{content:"";position:absolute;border-radius:50%;filter:blur(55px)}.world:before{width:520px;height:520px;background:rgba(178,183,250,.55);left:-140px;top:-150px}.world:after{width:560px;height:560px;background:rgba(200,237,231,.6);right:-160px;bottom:-230px}
+.ray{position:absolute;width:1px;height:170%;background:rgba(84,91,130,.08);transform:rotate(-14deg);top:-30%;left:20%;box-shadow:440px 0 rgba(84,91,130,.06),890px 0 rgba(84,91,130,.05)}
+.stage{height:100%;display:grid;place-items:center;padding:24px;position:relative}.app{width:min(1430px,100%);height:min(910px,calc(100vh - 48px));display:grid;grid-template-columns:68px minmax(0,1fr) 292px;background:rgba(248,250,255,.56);border:1px solid rgba(255,255,255,.8);border-radius:31px;box-shadow:0 30px 80px rgba(51,57,96,.2),inset 0 1px #fff;backdrop-filter:blur(28px);overflow:hidden}
+.rail{display:flex;flex-direction:column;align-items:center;padding:20px 0;border-right:1px solid rgba(255,255,255,.72);gap:12px}.logo,.rail button{width:38px;height:38px;border:0;border-radius:50%;display:grid;place-items:center}.logo{background:var(--navy);color:#fff;font-size:23px;font-weight:200;box-shadow:0 6px 14px rgba(22,25,48,.22)}.rail button{background:rgba(255,255,255,.76);color:#7d8498;transition:.2s;box-shadow:0 3px 10px rgba(48,55,91,.07)}.rail button:hover,.rail button.active{color:#272c45;transform:translateY(-2px);background:white}.rail .bottom{margin-top:auto;background:#17192d;color:#fff}.rail svg,.side svg,.tool svg,.composer svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.main{min-width:0;background:linear-gradient(145deg,rgba(248,251,255,.78),rgba(246,252,251,.6));position:relative;display:flex;flex-direction:column}.main:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 66% 12%,rgba(255,234,197,.24),transparent 24%),radial-gradient(circle at 72% 70%,rgba(196,221,255,.31),transparent 32%);pointer-events:none}.top{height:76px;display:grid;place-items:center;position:relative;z-index:1}.top b{font-size:13px;font-weight:600}.top span{position:absolute;right:20px;color:#949bad;font-size:10px}
+.conversation{flex:1;overflow-y:scroll;scroll-behavior:smooth;position:relative;padding:6px clamp(30px,8vw,125px) 20px;scrollbar-width:thin;scrollbar-color:#cdd3e2 transparent}.thread{max-width:850px;margin:auto;min-height:100%;display:flex;flex-direction:column;gap:23px}.stamp{text-align:center;color:#a1a8b9;font-size:9px;margin:4px 0 1px}.message{display:flex;gap:9px;align-items:flex-start}.message.user{justify-content:flex-end}.mini{width:24px;height:24px;flex:0 0 24px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff 0 6%,#a5e5d1 22%,#8b80c7 58%,#272c5d);box-shadow:0 3px 9px rgba(55,61,98,.18);display:grid;place-items:center;color:white;font-size:8px}.bubble{max-width:520px;padding:11px 14px;border-radius:7px 15px 15px 15px;background:rgba(255,255,255,.82);box-shadow:0 5px 20px rgba(63,72,109,.08);line-height:1.55}.user .bubble{border-radius:15px 15px 7px 15px;background:#1a1c31;color:white;box-shadow:0 6px 17px rgba(21,24,49,.16)}.time{font-size:8px;color:#adb3c0;margin-top:5px;text-align:right}.ai-label{font-size:9px;color:#81899d;margin-bottom:5px;font-weight:600}.typing{display:flex;gap:3px}.typing i{width:4px;height:4px;border-radius:50%;background:#9aa1b3;animation:blink 1.2s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}@keyframes blink{50%{opacity:.25;transform:translateY(-2px)}}
+.visual-card{margin:0 auto;width:min(620px,85%);height:260px;position:relative}.card{position:absolute;width:225px;height:156px;border-radius:14px;border:5px solid rgba(255,255,255,.83);box-shadow:0 16px 30px rgba(45,57,90,.2);overflow:hidden}.card.one{left:5%;top:50px;transform:rotate(-5deg);background:linear-gradient(160deg,#9ee6d2,#4ab9bb)}.card.two{left:36%;top:0;transform:rotate(5deg);background:linear-gradient(160deg,#93d9f0,#7783bc)}.card.three{left:28%;top:95px;transform:rotate(4deg);background:linear-gradient(150deg,#f5d4cd,#d7c0e9)}
+.scene{position:absolute;inset:0}.moon{position:absolute;width:53px;height:53px;border-radius:50%;background:#f6f1d1;right:24px;top:18px;box-shadow:0 0 20px #fff5bb}.hill{position:absolute;width:140%;height:70px;border-radius:50%;background:rgba(25,111,113,.45);left:-20%;bottom:-28px}.flower{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:52px;height:52px}.petal{position:absolute;left:19px;top:0;width:16px;height:28px;border-radius:50% 50% 45% 45%;background:rgba(255,255,255,.88);transform-origin:8px 27px}.petal:nth-child(2){transform:rotate(72deg)}.petal:nth-child(3){transform:rotate(144deg)}.petal:nth-child(4){transform:rotate(216deg)}.petal:nth-child(5){transform:rotate(288deg)}.flower:after{content:"";position:absolute;left:18px;top:18px;width:16px;height:16px;border-radius:50%;background:#e3b875;box-shadow:0 0 8px #fff}.sprig{position:absolute;width:90px;height:50px;left:25px;bottom:20px;border-bottom:2px solid rgba(30,98,80,.5);transform:rotate(-15deg)}.sprig:before,.sprig:after{content:"";position:absolute;width:24px;height:12px;border-radius:100% 0;background:#62a984}.sprig:before{left:18px;top:22px;transform:rotate(20deg)}.sprig:after{left:50px;top:31px;transform:rotate(-35deg)}
+.note{align-self:flex-end;margin-right:5%;display:flex;align-items:flex-end;gap:12px}.note .bubble{background:#fff;box-shadow:0 8px 22px rgba(59,66,97,.1)}.avatar-flower{width:80px;height:94px;position:relative;filter:drop-shadow(0 12px 11px rgba(47,54,86,.17))}.head{position:absolute;left:15px;top:0;width:54px;height:49px;border-radius:48% 48% 45% 45%;background:linear-gradient(145deg,#fff,#dfe5f3);border:1px solid white}.face{position:absolute;inset:10px 7px 8px;border-radius:16px;background:#1a2337;box-shadow:inset 0 0 8px #6f95ac}.eye{position:absolute;width:5px;height:8px;border-radius:50%;background:#b3fcf0;top:14px;box-shadow:0 0 7px #85f6e8}.eye.l{left:10px}.eye.r{right:10px}.smile{position:absolute;width:10px;height:5px;border-bottom:2px solid #b3fcf0;border-radius:50%;left:14px;bottom:7px}.body{position:absolute;left:21px;top:46px;width:43px;height:44px;border-radius:12px 12px 22px 22px;background:linear-gradient(100deg,#f9fbff,#cdd7e7);border:1px solid #fff}.leaf{position:absolute;width:25px;height:13px;border-radius:100% 0;background:#80bfa7}.leaf.a{left:2px;top:50px;transform:rotate(22deg)}.leaf.b{right:0;top:60px;transform:rotate(165deg)}
+.feedback{display:flex;align-items:center;gap:6px;color:#99a1b2;font-size:9px;margin:0 auto;width:min(620px,85%)}.feedback button{border:0;background:transparent;color:#848c9f;padding:3px}.feedback .push{margin-left:auto}
+.composer-wrap{position:relative;padding:12px clamp(28px,8vw,125px) 22px}.composer{max-width:850px;height:48px;margin:auto;border:1px solid rgba(61,70,105,.11);border-radius:13px;background:rgba(255,255,255,.85);box-shadow:0 9px 25px rgba(46,55,89,.09),inset 0 1px white;display:flex;align-items:center;padding:5px 7px}.composer input{border:0;outline:0;background:transparent;flex:1;min-width:0;padding:0 7px;color:#33384c}.composer input::placeholder{color:#a2a8b6}.tool{width:35px;height:35px;border:0;background:transparent;color:#9299aa;border-radius:9px;display:grid;place-items:center}.tool:hover{background:#f0f2f8;color:#33384d}.send{border-radius:50%;background:#1c2038;color:white}.send:hover{background:#2d3458}
+.side{border-left:1px solid rgba(255,255,255,.8);background:rgba(241,244,252,.56);padding:18px 16px;display:flex;flex-direction:column;min-width:0}.assistant-select{height:42px;border:1px solid rgba(58,64,92,.08);background:rgba(255,255,255,.74);border-radius:11px;display:flex;align-items:center;padding:0 11px;gap:8px;box-shadow:0 4px 14px rgba(55,62,94,.05)}.assistant-select strong{font-size:11px;flex:1}.tool-list{display:grid;gap:4px;margin:14px 0}.tool-row{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:9px}.tool-row:hover{background:rgba(255,255,255,.62)}.tool-row span{flex:1}.tool-icon{width:23px;height:23px;border-radius:6px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#8b82d2,#72b9b0)}.tool-icon svg{width:13px;height:13px}.count{font-size:9px;color:#959cac}.share{height:38px;border:0;border-radius:12px;background:#1b1e34;color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 7px 15px rgba(26,30,53,.15)}.history{margin-top:15px;overflow:auto}.day{margin-bottom:14px}.day h4{font-size:9px;color:#697287;margin:0 5px 5px}.history button{border:0;background:transparent;width:100%;padding:7px 5px;text-align:left;color:#697185;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:7px;font-size:10px}.history button:hover{background:rgba(255,255,255,.65);color:#272b41}.history button:before{content:"○";margin-right:7px}.mobile-side{display:none}
+@media(max-width:1000px){.app{grid-template-columns:62px 1fr}.side{display:none}.mobile-side{display:grid}.visual-card{height:235px}.composer-wrap{padding-left:40px;padding-right:40px}}
+@media(max-width:650px){.stage{padding:0}.app{height:100%;border-radius:0;border:0;grid-template-columns:1fr}.rail{display:none}.top{height:62px;border-bottom:1px solid rgba(50,55,80,.06)}.conversation{padding:10px 16px 20px}.composer-wrap{padding:10px 12px 17px}.visual-card{width:100%;transform:scale(.78);margin-top:-20px;margin-bottom:-20px}.note{margin-right:0}.top span{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#191c31;color:#fff;padding:10px 15px;border-radius:11px;opacity:0;pointer-events:none;transition:.25s;z-index:20;box-shadow:0 12px 30px rgba(20,24,50,.25)}.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;background:rgba(31,35,57,.2);backdrop-filter:blur(10px);z-index:10;display:none;place-items:center;padding:20px}.modal.open{display:grid}.dialog{width:min(460px,100%);max-height:80vh;overflow:auto;background:rgba(252,253,255,.94);border:1px solid #fff;border-radius:22px;padding:20px;box-shadow:0 30px 80px rgba(38,43,70,.25)}.dialog-head{display:flex;align-items:center;margin-bottom:16px}.dialog-head h2{font-size:16px;margin:0;flex:1}.close{border:0;background:#eef0f6;border-radius:50%;width:30px;height:30px}.searchbox{width:100%;border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px;outline:none}.result-list{display:grid;gap:6px;margin-top:12px}.result{border:0;background:#f4f5f9;border-radius:10px;padding:11px;text-align:left}.result small{display:block;color:#9097a8;margin-top:4px}.setting{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.setting span{flex:1}.toggle{width:42px;height:24px;border:0;border-radius:20px;background:#c9cedb;padding:3px}.toggle:after{content:"";display:block;width:18px;height:18px;border-radius:50%;background:white;transition:.2s}.toggle.on{background:#292e4c}.toggle.on:after{transform:translateX(18px)}.attachments{display:flex;gap:7px;max-width:850px;margin:0 auto 7px}.chip{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:9px;padding:7px 9px;color:#70788b}.message-actions{opacity:0;display:inline-flex;gap:4px;margin-left:8px;transition:.2s}.message:hover .message-actions{opacity:1}.message-actions button{border:0;background:transparent;color:#9299aa;font-size:9px}.generated-img{display:block;width:min(100%,540px);border-radius:15px;margin-top:10px;box-shadow:0 12px 30px rgba(38,45,75,.16);background:#e9ebf3;min-height:180px;object-fit:cover}.api-row{display:grid;gap:6px;padding:9px 0}.api-row label{font-size:10px;color:#747c90}.api-row input,.api-row select{width:100%;border:1px solid var(--line);background:white;border-radius:9px;padding:9px;outline:none}.api-note{font-size:9px;line-height:1.5;color:#8b92a3;margin:8px 0 4px}.welcome{padding:25px;text-align:center;color:#7d859a}.welcome h2{color:#252940;font-size:18px}.quick-actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.quick-actions button{border:1px solid var(--line);background:white;border-radius:12px;padding:9px 12px}
+.conversation::-webkit-scrollbar,.history::-webkit-scrollbar{width:8px}.conversation::-webkit-scrollbar-track,.history::-webkit-scrollbar-track{background:rgba(255,255,255,.25);border-radius:10px}.conversation::-webkit-scrollbar-thumb,.history::-webkit-scrollbar-thumb{background:rgba(77,87,119,.24);border:2px solid transparent;background-clip:padding-box;border-radius:10px}.conversation::-webkit-scrollbar-thumb:hover,.history::-webkit-scrollbar-thumb:hover{background:rgba(49,57,88,.4);border:2px solid transparent;background-clip:padding-box}.scroll-down{position:absolute;right:22px;bottom:82px;width:38px;height:38px;border:1px solid rgba(50,58,88,.11);border-radius:50%;background:rgba(255,255,255,.9);color:#34394f;display:grid;place-items:center;box-shadow:0 7px 20px rgba(40,47,76,.14);z-index:4;opacity:0;pointer-events:none;transform:translateY(8px);transition:.2s}.scroll-down.show{opacity:1;pointer-events:auto;transform:none}.scroll-down:hover{background:#fff;transform:translateY(-2px)}.scroll-down svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8}
+.scroll-up{position:absolute;right:22px;bottom:128px;width:38px;height:38px;border:1px solid rgba(50,58,88,.11);border-radius:50%;background:rgba(255,255,255,.9);color:#34394f;display:grid;place-items:center;box-shadow:0 7px 20px rgba(40,47,76,.14);z-index:4;opacity:0;pointer-events:none;transform:translateY(-8px);transition:.2s}.scroll-up.show{opacity:1;pointer-events:auto;transform:none}.scroll-up:hover{background:#fff;transform:translateY(-2px)}.scroll-up svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8}.offline-note{font-size:9px;color:#9299aa;margin-top:6px}.model-shell{height:auto;min-height:58px;padding:8px 9px}.model-copy{min-width:0;flex:1;display:grid;gap:2px}.model-copy>span{font-size:7px;letter-spacing:.13em;color:#9aa1b1}.model-copy select{width:100%;border:0;background:transparent;outline:0;font:inherit;font-weight:600;color:#2b3047;text-overflow:ellipsis}.model-copy select optgroup{font-weight:700;color:#555d74}.model-copy select option{font-weight:400;padding:5px}.model-refresh{width:28px;height:28px;border:0;border-radius:50%;background:rgba(232,235,244,.8);color:#687087;transition:.2s}.model-refresh:hover{background:#fff;transform:rotate(35deg)}.model-refresh.loading{animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.model-status{display:flex;align-items:center;gap:6px;padding:7px 8px 2px;color:#8b93a6;font-size:8px}.model-status i{width:6px;height:6px;border-radius:50%;background:#e0ad77;box-shadow:0 0 7px rgba(224,173,119,.5)}.model-status.live i{background:#70c5a4;box-shadow:0 0 7px rgba(112,197,164,.6)}.model-status.partial i{background:#d3b374}.model-status span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}</style>
+<style id="novaUpgrade">
+/* ======================================================================
+   NOVA UPGRADE LAYER — full screen · liquid glass · animations · themes
+   Appended after the base sheet so these rules win by cascade order.
+   ====================================================================== */
+
+/* ---------- THEME TOKENS ---------- */
+:root{
+  --ng-bg1:#c8cffb; --ng-bg2:#e9f4fb; --ng-bg3:#e5ddf6; --ng-bg4:#d7ecff;
+  --ng-blob1:rgba(150,160,255,.55); --ng-blob2:rgba(178,236,224,.6); --ng-blob3:rgba(255,206,224,.45);
+  --ng-glass:rgba(255,255,255,.42); --ng-glass-strong:rgba(255,255,255,.62);
+  --ng-glass-brd:rgba(255,255,255,.75); --ng-glass-hi:rgba(255,255,255,.9);
+  --ng-panel:rgba(246,249,255,.44); --ng-panel2:rgba(240,244,253,.4);
+  --ng-text:#22263a; --ng-text-soft:#5b6379; --ng-text-faint:#8a92a6;
+  --ng-accent:#6f79e0; --ng-accent2:#59c7b4; --ng-ink:#171a2e;
+  --ng-shadow:0 30px 90px rgba(45,52,96,.22); --ng-input:rgba(255,255,255,.7);
+  --ng-scroll:rgba(77,87,119,.28);
+}
+[data-theme="dark"]{
+  --ng-bg1:#0b1022; --ng-bg2:#131a33; --ng-bg3:#1a1330; --ng-bg4:#0d1c2c;
+  --ng-blob1:rgba(97,110,220,.42); --ng-blob2:rgba(48,150,140,.4); --ng-blob3:rgba(150,70,140,.38);
+  --ng-glass:rgba(30,36,60,.5); --ng-glass-strong:rgba(38,45,74,.66);
+  --ng-glass-brd:rgba(255,255,255,.12); --ng-glass-hi:rgba(255,255,255,.16);
+  --ng-panel:rgba(22,28,50,.5); --ng-panel2:rgba(26,32,56,.46);
+  --ng-text:#e6eaf6; --ng-text-soft:#a8b0c8; --ng-text-faint:#7c86a2;
+  --ng-accent:#8b95ff; --ng-accent2:#5fd8c4; --ng-ink:#e6eaf6;
+  --ng-shadow:0 30px 90px rgba(0,0,0,.55); --ng-input:rgba(20,25,44,.6);
+  --ng-scroll:rgba(150,160,200,.3);
+}
+html,body{height:100%}
+
+/* ============ CLAUDE-STYLE TYPOGRAPHY ============
+   Warm Tiempos-like serif (Newsreader) for display / headings, refined sans
+   (Inter → system) for body & controls. Falls back gracefully to Georgia /
+   system fonts if the web fonts are blocked (e.g. offline previews).       */
+:root{
+  --font-serif:"Newsreader","Tiempos Text",Georgia,"Times New Roman",serif;
+  --font-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+body{font-family:var(--font-sans);color:var(--ng-text);transition:color .4s ease;letter-spacing:.005em}
+/* Serif display used across Claude-like headings */
+.top b,.ai-label,.welcome h2,.dialog-head h2,.model-copy>span{font-family:var(--font-serif)}
+.top b{font-size:1.35em;font-weight:500;letter-spacing:.01em}
+.ai-label{font-family:var(--font-serif);font-weight:500;font-size:.95em;letter-spacing:.01em;font-style:normal}
+.welcome h2{font-family:var(--font-serif);font-weight:500;font-size:1.9em;letter-spacing:.005em}
+.dialog-head h2{font-family:var(--font-serif);font-weight:500}
+.model-copy>span{font-family:var(--font-sans)} /* keep the tiny label as sans caps */
+/* AI reply body reads a touch larger & warmer, Claude-style */
+.message:not(.user) .bubble{font-family:var(--font-serif);font-size:1.06em;line-height:1.62;letter-spacing:.003em}
+.user .bubble{font-family:var(--font-sans)}
+.day h4{font-family:var(--font-sans);letter-spacing:.14em}
+
+/* ============ LOGIN / SIGNUP ============ */
+.auth-dialog{width:min(400px,100%)}
+.auth-tabs{display:flex;gap:6px;padding:4px;border-radius:12px;background:var(--ng-glass);border:1px solid var(--ng-glass-brd);margin-bottom:14px}
+.auth-tab{flex:1;border:0;border-radius:9px;padding:9px;background:transparent;color:var(--ng-text-soft);font-weight:600;transition:.2s}
+.auth-tab.active{background:var(--ng-glass-strong);color:var(--ng-text);box-shadow:0 4px 12px rgba(50,60,110,.16)}
+.auth-hero{text-align:center;margin-bottom:14px}
+.auth-hero p{color:var(--ng-text-faint);font-size:11px;margin:8px 0 0}
+#authTitle{font-family:var(--font-serif);font-weight:500}
+/* account rail button shows initial when logged in */
+.rail button#accountBtn{overflow:hidden;font-family:var(--font-serif);font-weight:600;font-size:1.05em}
+.rail button#accountBtn.authed{background:linear-gradient(140deg,var(--ng-accent),var(--ng-accent2))!important;color:#fff}
+.rail button#accountBtn.authed svg{display:none}
+/* profile card */
+.profile-card{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;background:var(--ng-glass);border:1px solid var(--ng-glass-brd);margin-bottom:6px}
+.profile-card strong{font-family:var(--font-serif);font-weight:500;font-size:1.2em;color:var(--ng-text)}
+.profile-avatar{width:46px;height:46px;flex:0 0 46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--font-serif);font-weight:600;font-size:20px;background:linear-gradient(140deg,var(--ng-accent),var(--ng-accent2));box-shadow:0 6px 16px rgba(70,80,160,.35)}
+
+/* ============ FULL-SCREEN VOICE MODE ============ */
+.voice-overlay{position:fixed;inset:0;z-index:40;display:none;place-items:center;
+  background:radial-gradient(ellipse at 50% 40%,rgba(30,36,66,.55),rgba(8,10,22,.82));
+  -webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);
+  animation:ngRise .5s ease both}
+.voice-overlay.open{display:grid}
+.voice-inner{display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;padding:24px}
+.voice-close{position:fixed;top:22px;right:24px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ng-glass-strong);border:1px solid var(--ng-glass-brd);color:#fff;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .2s}
+.voice-close:hover{transform:rotate(90deg) scale(1.05)}
+.voice-close svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+/* animated orb */
+.voice-orb{position:relative;width:210px;height:210px;display:grid;place-items:center}
+.vo-core{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,#4285f4,#9b72cb,#d96570,#f2a60c);background-size:220% 220%;
+  box-shadow:0 20px 60px rgba(90,90,200,.55),inset 0 2px 12px rgba(255,255,255,.5);
+  animation:gShift 7s linear infinite,voBreathe 3.4s ease-in-out infinite;transition:transform .3s}
+.vo-core svg{width:46px;height:46px}
+.vo-ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);inset:0;opacity:0;pointer-events:none}
+@keyframes voBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes voPulse{0%{transform:scale(.62);opacity:.7}100%{transform:scale(1.35);opacity:0}}
+/* state-driven ring animation */
+.voice-orb.listening .vo-ring{animation:voPulse 2s ease-out infinite}
+.voice-orb.listening .vo-r2{animation-delay:.5s}
+.voice-orb.listening .vo-r3{animation-delay:1s}
+.voice-orb.listening .vo-core{animation:gShift 7s linear infinite,voBreathe 1.2s ease-in-out infinite}
+.voice-orb.speaking .vo-ring{border-color:rgba(95,216,196,.5);animation:voPulse 1.1s ease-out infinite}
+.voice-orb.speaking .vo-r2{animation-delay:.35s}.voice-orb.speaking .vo-r3{animation-delay:.7s}
+.voice-orb.thinking .vo-core{animation:gShift 2.5s linear infinite,voBreathe 2s ease-in-out infinite}
+.voice-orb.thinking{filter:saturate(1.1)}
+.voice-state{font-family:var(--font-serif);font-size:22px;color:#fff;letter-spacing:.01em;font-weight:500;min-height:28px}
+.voice-caption{max-width:min(680px,86vw);min-height:44px;color:rgba(255,255,255,.85);font-size:15px;line-height:1.55}
+.voice-controls{display:flex;gap:16px;margin-top:6px}
+.voice-btn{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ng-glass-strong);border:1px solid var(--ng-glass-brd);color:#fff;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 26px rgba(40,46,90,.4);transition:transform .2s,background .2s}
+.voice-btn:hover{transform:translateY(-3px) scale(1.06)}
+.voice-btn.active{background:linear-gradient(140deg,#4285f4,#9b72cb)!important}
+.voice-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(prefers-reduced-motion:reduce){.vo-core,.vo-ring{animation:none!important}}
+
+/* ============ NOVA "SIRI ORB" LOOK (matches uploaded reference) ============
+   Soft glossy sphere: magenta/pink core, purple top, blue right, warm peach
+   glow lower-left, bright top-left highlight, layered for a 3D read.        */
+.nova-orb{
+  position:relative;border-radius:50%;overflow:hidden;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 26%),
+    radial-gradient(circle at 72% 30%, #a06bff 0%, rgba(160,107,255,0) 46%),
+    radial-gradient(circle at 82% 62%, #4d8bff 0%, rgba(77,139,255,0) 48%),
+    radial-gradient(circle at 32% 82%, #ff9d5c 0%, rgba(255,157,92,0) 46%),
+    radial-gradient(circle at 46% 52%, #ff2ea6 0%, #d61e8c 40%, #9b1c8f 74%, #5c1a6e 100%);
+  box-shadow:0 10px 30px rgba(150,40,140,.4),0 4px 12px rgba(90,30,120,.35),
+             inset 0 2px 10px rgba(255,255,255,.55),inset 0 -8px 22px rgba(80,10,80,.4);
+}
+/* animated hue drift so the orb feels alive */
+.nova-orb.alive{animation:orbDrift 9s ease-in-out infinite}
+@keyframes orbDrift{0%,100%{filter:hue-rotate(0deg) saturate(1)}50%{filter:hue-rotate(24deg) saturate(1.12)}}
+/* the two cute white eyes from the reference (soft teardrop / leaf shape) */
+.nova-orb .orb-eyes{position:absolute;inset:0;pointer-events:none}
+.nova-orb .orb-eyes:before,.nova-orb .orb-eyes:after{content:"";position:absolute;top:37%;
+  width:15%;height:23%;background:#fff;
+  border-radius:80% 80% 55% 55% / 92% 92% 40% 40%;
+  box-shadow:0 0 6px rgba(255,255,255,.9),0 1px 3px rgba(120,20,110,.25)}
+.nova-orb .orb-eyes:before{left:29%}
+.nova-orb .orb-eyes:after{right:29%}
+
+/* Apply the orb look to logo, Nova avatar & voice core; hide their old icons */
+.logo{background:none!important;box-shadow:none!important}
+.logo{padding:0;color:transparent;font-size:0}
+.mini.nf{background:none!important;animation:none!important}
+.mini.nf svg,.logo :not(.orb-eyes){display:none}
+.vo-core{background:none!important}
+.vo-core svg{display:none}
+
+/* ---------- AUTO-FIT SCALING: adapt to any screen resolution ----------
+   The whole UI is authored in px against a 12px root. We make the root
+   font-size fluid so every rem-derived size scales with the viewport, and
+   JS fine-tunes it per screen. The chat column, rail and sidebar widths
+   also scale so the layout fills big screens and shrinks on small ones. */
+:root{--ui-scale:1}
+/* Root font-size is set fluidly by JS (autoFit); this is the no-JS fallback. */
+html{font-size:clamp(10.5px, calc(0.45vw + 0.5vh + 6px), 15.5px)}
+body{font-size:1rem}
+.app{
+  grid-template-columns:clamp(56px,4.6vw,88px) minmax(0,1fr) clamp(240px,20vw,360px);
+  height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;overflow:hidden;
+}
+/* Lock the center column to the viewport and let ONLY the chat scroll, so the
+   composer (prompt box) is always pinned and visible no matter how long the
+   conversation gets. min-height:0 is what lets a flex child actually scroll. */
+.main{height:100%;min-height:0;overflow:hidden}
+.conversation{flex:1 1 auto;min-height:0;overflow-y:auto}
+.composer-wrap{flex:0 0 auto}
+.top{flex:0 0 auto}
+.rail svg,.side svg,.tool svg,.composer svg{width:1.42em;height:1.42em}
+.logo,.rail button{width:3.1em;height:3.1em}
+.thread{max-width:min(70vw,1100px)}
+.composer,.attachments{max-width:min(70vw,1100px)}
+.composer{height:auto;min-height:3.6em}
+.bubble{max-width:min(62%,720px)}
+@media(max-width:1000px){.thread,.composer,.attachments{max-width:94vw}}
+
+/* ---------- WEBGL SHADER BACKGROUND ---------- */
+#glCanvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:-2;display:block;pointer-events:none}
+/* When the shader is live, let it show through the CSS world layer */
+body.gl-on .world{background:transparent!important;animation:none!important}
+body.gl-on .world:before,body.gl-on .world:after{opacity:.35;mix-blend-mode:screen}
+body.gl-on .world .ray{opacity:.25}
+.world{z-index:-1}
+
+/* ---------- ANIMATED LIVING BACKGROUND ---------- */
+.world{
+  background:linear-gradient(125deg,var(--ng-bg1),var(--ng-bg2) 42%,var(--ng-bg3) 72%,var(--ng-bg4));
+  background-size:260% 260%;
+  animation:ngGradient 26s ease infinite;
+  transition:background .6s ease;
+}
+@keyframes ngGradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.world:before{background:var(--ng-blob1);animation:ngFloat1 22s ease-in-out infinite;transition:background .6s ease}
+.world:after{background:var(--ng-blob2);animation:ngFloat2 28s ease-in-out infinite;transition:background .6s ease}
+@keyframes ngFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(80px,60px) scale(1.15)}}
+@keyframes ngFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-70px,-50px) scale(1.1)}}
+/* extra roaming blob */
+.world .ray{
+  width:420px;height:420px;background:var(--ng-blob3);border-radius:50%;filter:blur(70px);
+  opacity:.8;box-shadow:none;top:auto;left:auto;right:20%;bottom:8%;transform:none;
+  animation:ngFloat3 34s ease-in-out infinite;
+}
+@keyframes ngFloat3{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-120px,-90px) scale(1.2)}66%{transform:translate(90px,40px) scale(.9)}}
+
+/* ---------- FULL SCREEN ---------- */
+.stage{padding:0}
+.app{
+  width:100vw;height:100vh;max-width:100vw;border-radius:0;border:0;
+  background:var(--ng-glass);
+  -webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);
+  box-shadow:none;
+  animation:ngRise .7s cubic-bezier(.2,.8,.2,1) both;
+  transition:background .5s ease;
+}
+@keyframes ngRise{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+
+/* ---------- LIQUID GLASS PANELS ---------- */
+.rail,.side{
+  background:var(--ng-panel);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+  border-color:var(--ng-glass-brd);
+  transition:background .5s ease,border-color .5s ease;
+}
+.main{background:transparent}
+.main:before{opacity:.85}
+.top b{color:var(--ng-text)}
+.top span{color:var(--ng-text-faint)}
+
+/* Rail + side buttons picking up glass + theme */
+.rail button,.assistant-select,.model-refresh,.scroll-down,.scroll-up{
+  background:var(--ng-glass-strong)!important;color:var(--ng-text-soft);
+  border:1px solid var(--ng-glass-brd);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),background .3s ease,color .3s ease,box-shadow .3s ease;
+}
+.rail button:hover,.rail button.active{color:var(--ng-text);transform:translateY(-3px) scale(1.06);box-shadow:0 10px 24px rgba(60,70,120,.22)}
+.rail .bottom{background:var(--ng-ink)!important;color:var(--ng-glass-hi)}
+.logo{background:linear-gradient(140deg,var(--ng-accent),var(--ng-accent2));box-shadow:0 8px 22px rgba(70,80,160,.35);transition:transform .3s}
+.logo:hover{transform:rotate(90deg) scale(1.05)}
+
+/* ---------- MESSAGE BUBBLES: glass + entrance animation ---------- */
+.bubble{
+  background:var(--ng-glass-strong);color:var(--ng-text);
+  border:1px solid var(--ng-glass-brd);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:0 8px 26px rgba(50,60,100,.14);
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.bubble:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(50,60,100,.2)}
+.user .bubble{background:linear-gradient(140deg,var(--ng-accent),#4d55b8);color:#fff;border-color:rgba(255,255,255,.18)}
+.message{animation:ngPop .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes ngPop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.ai-label{color:var(--ng-text-faint)}
+.time{color:var(--ng-text-faint)}
+.mini{box-shadow:0 4px 14px rgba(60,70,130,.3),0 0 0 1px var(--ng-glass-brd)}
+
+/* ============ LIQUID-GLASS BUBBLE ICONS ============ */
+/* Frosted avatar orbs beside every message */
+.mini{
+  position:relative;width:30px;height:30px;flex:0 0 30px;overflow:hidden;
+  background:var(--ng-glass-strong);
+  -webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);
+  border:1px solid var(--ng-glass-brd);
+  box-shadow:0 6px 18px rgba(50,60,110,.28),inset 0 1px var(--ng-glass-hi);
+  color:var(--ng-text);transition:transform .3s ease,box-shadow .3s ease;
+}
+.mini:hover{transform:translateY(-2px) scale(1.06);box-shadow:0 10px 24px rgba(50,60,110,.36),inset 0 1px var(--ng-glass-hi)}
+/* glossy top sheen highlight on the orb */
+.mini:before{content:"";position:absolute;left:14%;top:8%;width:62%;height:44%;border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,0));opacity:.7;pointer-events:none}
+.mini svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;position:relative;z-index:1}
+/* Nova avatar: tinted with the Google gradient sheen */
+.mini.nf{color:#fff;background:linear-gradient(140deg,rgba(66,133,244,.9),rgba(155,114,203,.9),rgba(95,216,196,.9));background-size:200% 200%;animation:gShift 8s linear infinite}
+.mini.you{color:var(--ng-accent)}
+/* keep the streaming/typing avatar consistent */
+.g-thinking + .mini{margin:0}
+
+/* Liquid-glass icon action buttons on each bubble */
+.message-actions{gap:5px;align-items:center}
+.message-actions button{
+  width:26px;height:26px;padding:0;border-radius:50%;display:grid;place-items:center;
+  background:var(--ng-glass-strong);border:1px solid var(--ng-glass-brd);color:var(--ng-text-soft);
+  -webkit-backdrop-filter:blur(8px) saturate(150%);backdrop-filter:blur(8px) saturate(150%);
+  box-shadow:0 4px 12px rgba(50,60,110,.18),inset 0 1px var(--ng-glass-hi);
+  transition:transform .2s ease,color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.message-actions button:hover{transform:translateY(-2px) scale(1.1);color:var(--ng-text);background:var(--ng-glass-hi);box-shadow:0 8px 18px rgba(50,60,110,.28)}
+.message-actions button:active{transform:scale(.94)}
+.message-actions button svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.message-actions button.liked{color:#e0577f}
+.message-actions button.liked svg{fill:#e0577f;stroke:#e0577f}
+.message-actions button.spin svg{animation:spin .7s linear infinite}
+.user .message-actions{justify-content:flex-end}
+
+/* ---------- COMPOSER: liquid glass bar ---------- */
+.composer{
+  background:var(--ng-glass-strong);border:1px solid var(--ng-glass-brd);
+  -webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);
+  box-shadow:0 12px 34px rgba(46,55,100,.16),inset 0 1px var(--ng-glass-hi);
+  transition:box-shadow .3s ease,background .4s ease,transform .3s ease;
+}
+.composer:focus-within{box-shadow:0 16px 42px rgba(80,90,170,.26),0 0 0 2px var(--ng-accent);transform:translateY(-1px)}
+.composer input{color:var(--ng-text)}
+.composer input::placeholder{color:var(--ng-text-faint)}
+.tool{color:var(--ng-text-faint);transition:transform .2s,background .2s,color .2s}
+.tool:hover{background:var(--ng-glass);color:var(--ng-text);transform:translateY(-2px)}
+.send{background:linear-gradient(140deg,var(--ng-accent),var(--ng-accent2))!important;color:#fff;box-shadow:0 8px 20px rgba(80,90,170,.4)}
+
+/* ============ GEMINI-STYLE ANIMATIONS ============ */
+/* Google 4-color gradient used across sparkle, shimmer & send button */
+:root{--g-grad:linear-gradient(90deg,#4285f4,#9b72cb,#d96570,#f2a60c,#4285f4)}
+/* Send button gets the animated Google gradient */
+.send{background:var(--g-grad)!important;background-size:300% 100%!important;animation:gShift 6s linear infinite}
+.send:hover{filter:saturate(1.15) brightness(1.05)}
+@keyframes gShift{to{background-position:300% 0}}
+
+/* Sparkle "thinking" icon */
+.g-spark{width:20px;height:20px;flex:0 0 20px;display:inline-block;animation:gSparkSpin 3.2s ease-in-out infinite,gSparkPulse 1.6s ease-in-out infinite}
+.g-spark svg{width:100%;height:100%;display:block}
+.g-spark .g-star{fill:url(#gGrad)}
+@keyframes gSparkSpin{0%{transform:rotate(0)}60%{transform:rotate(190deg)}100%{transform:rotate(360deg)}}
+@keyframes gSparkPulse{0%,100%{transform:scale(.9);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+
+/* Shimmering "Nova is thinking…" text (gradient sweep) */
+.g-thinking{display:flex;align-items:center;gap:9px;padding:2px 0}
+.g-shimmer{font-size:12px;font-weight:600;letter-spacing:.2px;
+  background:linear-gradient(100deg,var(--ng-text-faint) 30%,#4285f4 42%,#9b72cb 50%,#d96570 58%,var(--ng-text-faint) 70%);
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:gSweep 2.1s linear infinite}
+@keyframes gSweep{0%{background-position:180% 0}100%{background-position:-80% 0}}
+
+/* Loading skeleton bars that shimmer while waiting (Gemini-like placeholder) */
+.g-skeleton{display:grid;gap:8px;margin-top:10px;max-width:420px}
+.g-skeleton i{height:9px;border-radius:6px;background:linear-gradient(100deg,var(--ng-glass) 30%,var(--ng-glass-hi) 50%,var(--ng-glass) 70%);background-size:220% 100%;animation:gSweep 1.8s linear infinite;display:block}
+.g-skeleton i:nth-child(1){width:92%}.g-skeleton i:nth-child(2){width:78%;animation-delay:.15s}.g-skeleton i:nth-child(3){width:60%;animation-delay:.3s}
+
+/* Word-by-word streaming reveal */
+.g-word{opacity:0;display:inline;animation:gWordIn .34s ease forwards}
+@keyframes gWordIn{from{opacity:0;filter:blur(3px);transform:translateY(2px)}to{opacity:1;filter:blur(0);transform:none}}
+/* soft blinking caret at the end of a streaming reply */
+.g-caret{display:inline-block;width:7px;height:1.05em;vertical-align:-2px;margin-left:2px;border-radius:2px;background:var(--g-grad);background-size:300% 100%;animation:gShift 6s linear infinite,gCaret 1s steps(2) infinite}
+@keyframes gCaret{50%{opacity:0}}
+.send:hover{transform:translateY(-2px) scale(1.05)}
+
+/* ---------- SIDE: glass shells ---------- */
+.assistant-select{border-color:var(--ng-glass-brd)}
+.model-copy select,.model-copy select optgroup{color:var(--ng-text)}
+.model-copy select option{color:#20233a}
+.model-copy>span,.model-status,.model-status span{color:var(--ng-text-faint)}
+.tool-row{transition:background .25s,transform .2s}
+.tool-row:hover{background:var(--ng-glass);transform:translateX(3px)}
+.tool-row span{color:var(--ng-text-soft)}
+.tool-icon{background:linear-gradient(135deg,var(--ng-accent),var(--ng-accent2))}
+/* Credits line at the bottom of the sidebar */
+.credits{flex:0 0 auto;margin-top:12px;padding-top:12px;border-top:1px solid var(--ng-glass-brd);
+  text-align:center;font-size:9px;letter-spacing:.16em;color:var(--ng-text-faint);font-family:var(--font-sans);text-transform:uppercase}
+.credits b{font-weight:700;letter-spacing:.12em;background:var(--g-grad);background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:gShift 6s linear infinite}
+
+/* New chat button in the sidebar */
+.new-chat-btn{width:100%;margin:12px 0 4px;height:2.9em;border:1px solid var(--ng-glass-brd);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-weight:600;font-family:var(--font-sans);
+  background:var(--g-grad);background-size:300% 100%;animation:gShift 6s linear infinite;
+  box-shadow:0 8px 20px rgba(80,90,170,.35),inset 0 1px var(--ng-glass-hi);transition:transform .2s,box-shadow .2s,filter .2s}
+.new-chat-btn:hover{transform:translateY(-2px);filter:saturate(1.12) brightness(1.04);box-shadow:0 12px 26px rgba(80,90,170,.45)}
+.new-chat-btn:active{transform:scale(.98)}
+.new-chat-btn svg{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.share{background:linear-gradient(140deg,var(--ng-ink),#2a3055)!important;color:#fff;transition:transform .25s,box-shadow .25s}
+.share:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(30,36,70,.35)}
+.history button{color:var(--ng-text-soft);transition:background .2s,color .2s,transform .2s}
+.history button:hover{background:var(--ng-glass);color:var(--ng-text);transform:translateX(3px)}
+.day h4{color:var(--ng-text-faint)}
+.count{color:var(--ng-text-faint)}
+
+/* ---------- SCROLLABLE SIDEBAR ---------- */
+.side{overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--ng-scroll) transparent}
+.side .assistant-select,.side .model-status,.side .tool-list,.side .share{flex:0 0 auto}
+.history{flex:1 1 auto;min-height:80px;overflow:visible;margin-top:15px}
+.side::-webkit-scrollbar{width:8px}
+.side::-webkit-scrollbar-track{background:transparent}
+.side::-webkit-scrollbar-thumb{background:var(--ng-scroll);border:2px solid transparent;background-clip:padding-box;border-radius:10px}
+.side::-webkit-scrollbar-thumb:hover{background:rgba(49,57,88,.45);border:2px solid transparent;background-clip:padding-box}
+
+/* ---------- SCROLL BUTTONS ---------- */
+.scroll-up svg{stroke:var(--ng-text)}
+.scroll-up:hover{transform:translateY(-3px) scale(1.08);box-shadow:0 12px 28px rgba(60,70,120,.28)}
+/* Scroll-to-bottom: always visible, Gemini gradient accent */
+.scroll-down{opacity:1!important;pointer-events:auto!important;transform:none!important;
+  background:var(--g-grad)!important;background-size:300% 100%!important;animation:gShift 6s linear infinite;
+  border-color:rgba(255,255,255,.35)!important;box-shadow:0 8px 22px rgba(60,70,120,.32)!important}
+.scroll-down svg{stroke:#fff}
+.scroll-down:hover{transform:translateY(-3px) scale(1.1)!important;box-shadow:0 12px 30px rgba(60,70,120,.4)!important}
+
+/* ---------- MODALS: deeper liquid glass ---------- */
+.modal{background:rgba(15,18,34,.32);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.modal.open .dialog{animation:ngDialog .38s cubic-bezier(.2,.9,.2,1) both}
+@keyframes ngDialog{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+.dialog{
+  background:var(--ng-glass-strong);color:var(--ng-text);
+  border:1px solid var(--ng-glass-brd);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+  box-shadow:var(--ng-shadow);
+}
+.dialog-head h2{color:var(--ng-text)}
+.close{background:var(--ng-glass)!important;color:var(--ng-text);transition:transform .2s,background .2s}
+.close:hover{transform:rotate(90deg)}
+.searchbox,.api-row input,.api-row select{background:var(--ng-input);color:var(--ng-text);border-color:var(--ng-glass-brd)}
+.api-row label,.api-note{color:var(--ng-text-faint)}
+.result{background:var(--ng-glass);color:var(--ng-text);transition:transform .2s,background .2s}
+.result:hover{background:var(--ng-glass-strong);transform:translateX(3px)}
+.result small{color:var(--ng-text-faint)}
+.setting{border-color:var(--ng-glass-brd)}
+.setting span{color:var(--ng-text)}
+.chip{background:var(--ng-glass-strong);color:var(--ng-text-soft);border-color:var(--ng-glass-brd)}
+.welcome,.welcome p{color:var(--ng-text-soft)}
+.welcome h2{color:var(--ng-text)}
+.quick-actions button{background:var(--ng-glass-strong);color:var(--ng-text);border-color:var(--ng-glass-brd);transition:transform .2s,box-shadow .2s}
+.quick-actions button:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(60,70,120,.2)}
+.toast{background:var(--ng-ink);color:var(--ng-glass-hi);border:1px solid var(--ng-glass-brd);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+
+/* ---------- SCROLLBARS ---------- */
+.conversation,.history{scrollbar-color:var(--ng-scroll) transparent}
+.conversation::-webkit-scrollbar-thumb,.history::-webkit-scrollbar-thumb{background:var(--ng-scroll);border:2px solid transparent;background-clip:padding-box}
+
+/* ---------- THEME TOGGLE BUTTON (in rail) ---------- */
+#themeBtn svg{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+#themeBtn:hover svg{transform:rotate(40deg)}
+[data-theme="dark"] #themeBtn .ng-sun{display:none}
+#themeBtn .ng-moon{display:none}
+[data-theme="dark"] #themeBtn .ng-moon{display:block}
+
+/* full-screen: relax the max-width so wide screens use the space */
+@media(min-width:1100px){.thread{max-width:920px}.composer,.attachments{max-width:920px}}
+@media(prefers-reduced-motion:reduce){.world,.world:before,.world:after,.world .ray,.app,.message,.modal.open .dialog{animation:none!important}}
+</style></head>
+<body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285f4"/><stop offset=".4" stop-color="#9b72cb"/><stop offset=".7" stop-color="#d96570"/><stop offset="1" stop-color="#f2a60c"/></linearGradient></defs></svg><canvas id="glCanvas" aria-hidden="true"></canvas><div class="world"><div class="ray"></div></div><main class="stage"><section class="app">
+<nav class="rail" aria-label="Main navigation"><div class="logo nova-orb alive"><span class="orb-eyes"></span></div><button class="active" id="searchBtn" aria-label="Search chats"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button><button id="newBtn" aria-label="New conversation"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="m15 9-2 4-4 2 2-4 4-2Z"/></svg></button><button id="exportBtn" aria-label="Export conversation"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><circle cx="17" cy="8" r="2"/><path d="M3 20c0-4 2-6 6-6s6 2 6 6M15 14c3 0 5 2 5 5"/></svg></button><button id="settingsBtn" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></button><button id="themeBtn" aria-label="Toggle dark and light mode" title="Toggle dark / light mode"><svg viewBox="0 0 24 24"><g class="ng-sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></g><path class="ng-moon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg></button><button class="bottom" id="accountBtn" aria-label="Account: log in or sign up" title="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></button></nav>
+<section class="main"><header class="top"><b>Creative Garden</b><span>Private · Auto-saved</span></header><div class="conversation" id="scroll"><div class="thread">
+<div id="messages"></div></div></div>
+<button class="scroll-up" id="scrollUp" aria-label="Scroll to top of conversation"><svg viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg></button><button class="scroll-down" id="scrollDown" aria-label="Scroll to latest message"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="composer-wrap"><form class="composer" id="form"><button type="button" class="tool" id="attachBtn" aria-label="Attach"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><input type="file" id="fileInput" hidden multiple accept="image/*,.txt,.md,.pdf"><input id="input" aria-label="Message Nova Flora" placeholder="Ask Nova Flora anything..." autocomplete="off"><button type="button" class="tool" id="imageBtn" aria-label="Image"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 15-4-4L6 20"/></svg></button><button type="button" class="tool" id="voiceBtn" aria-label="Voice"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button type="submit" class="tool send" id="sendBtn" aria-label="Send"><svg viewBox="0 0 24 24"><path d="m6 12 12-6-3 12-3-5-6-1Z"/></svg></button></form></div></section>
+<aside class="side"><div class="assistant-select model-shell"><div class="mini">NF</div><div class="model-copy"><span>ACTIVE MODEL</span><select id="activeModel" aria-label="AI model"><optgroup label="LLM7.io"><option value="llm7:fast">Fast · automatic routing</option><option value="llm7:default">Default · balanced</option></optgroup><optgroup label="Pollinations"><option value="pollinations:openai">OpenAI</option><option value="pollinations:mistral">Mistral</option><option value="pollinations:gemini">Gemini</option></optgroup></select></div><button class="model-refresh" id="refreshModels" title="Refresh model list" aria-label="Refresh model list">↻</button></div><div class="model-status" id="modelStatus"><i></i><span>Loading live model catalogue…</span></div><button class="new-chat-btn" id="sideNewChat"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New chat</button><div class="tool-list"><div class="tool-row"><div class="tool-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></div><span>Calendar & Planning</span></div><div class="tool-row"><div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5Z"/><path d="M9 12h6M9 16h6"/></svg></div><span>File Reader</span></div><div class="tool-row"><div class="tool-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 15-4-4L6 20"/></svg></div><span>Media Garden</span><i class="count">12</i></div></div><button class="share"><svg viewBox="0 0 24 24"><path d="M12 16V4M8 8l4-4 4 4M5 13v7h14v-7"/></svg>Share</button><div class="history" id="history"><div class="day"><h4>Today</h4><button>A calm creative companion</button><button>Ideas for a moonlit interface</button></div><div class="day"><h4>Yesterday</h4><button>Create a serene moodboard</button><button>Write a graceful welcome</button></div><div class="day"><h4>Previous 7 days</h4><button>Plan my creative week</button></div></div><div class="credits">MADE BY <b>AANNIESON DITZ</b></div></aside>
+</section></main>
+<div class="modal" id="searchModal"><div class="dialog"><div class="dialog-head"><h2>Search conversations</h2><button class="close" data-close>×</button></div><input class="searchbox" id="searchInput" placeholder="Search by title or message…"><div class="result-list" id="results"></div></div></div>
+<div class="modal" id="settingsModal"><div class="dialog"><div class="dialog-head"><h2>Nova Flora settings</h2><button class="close" data-close>×</button></div><div class="api-row"><label>Text provider</label><select id="provider"><option value="auto">Auto — LLM7 with key, otherwise Pollinations</option><option value="pollinations">Pollinations</option><option value="llm7">LLM7.io</option></select></div><div class="api-row"><label>LLM7 API key</label><input id="llm7Key" type="password" placeholder="Required by LLM7.io"></div><div class="api-row"><label>Pollinations API key (optional)</label><input id="pollKey" type="password" placeholder="Optional for higher limits"></div><p class="api-note">Keys are stored only in this browser. For a public production app, use a secure server proxy instead of client-side keys.</p><button class="share" id="saveApi" style="width:100%;margin-bottom:8px">Save API settings</button><div class="setting"><span>Soft response sounds</span><button class="toggle on" data-setting="sounds"></button></div><div class="setting"><span>Reduce animation</span><button class="toggle" data-setting="reduced"></button></div><div class="setting"><span>Compact messages</span><button class="toggle" data-setting="compact"></button></div><div class="setting"><span>Clear all local data</span><button class="tool" id="clearBtn">Clear</button></div></div></div>
+<div class="modal" id="authModal"><div class="dialog auth-dialog"><div class="dialog-head"><h2 id="authTitle">Welcome back</h2><button class="close" data-close>×</button></div>
+<div class="auth-tabs"><button class="auth-tab active" data-authtab="login">Log in</button><button class="auth-tab" data-authtab="signup">Sign up</button></div>
+<div class="auth-hero"><div class="mini nf nova-orb alive" style="width:44px;height:44px;flex:0 0 44px;margin:auto"><span class="orb-eyes"></span></div><p id="authSub">Sign in to keep your conversations on this device.</p></div>
+<form id="authForm"><div class="api-row" id="nameRow" style="display:none"><label>Display name</label><input id="authName" type="text" placeholder="e.g. Aria" autocomplete="name"></div>
+<div class="api-row"><label>Email</label><input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" required></div>
+<div class="api-row"><label>Password</label><input id="authPass" type="password" placeholder="At least 6 characters" autocomplete="current-password" required></div>
+<p class="api-note" id="authErr" style="color:#e0577f;display:none"></p>
+<button class="share" id="authSubmit" type="submit" style="width:100%;margin:6px 0 4px">Log in</button></form>
+<p class="api-note">Accounts are stored only in this browser (offline demo). This is not real security — don't reuse an important password.</p></div></div>
+<div class="modal" id="profileModal"><div class="dialog"><div class="dialog-head"><h2>Your account</h2><button class="close" data-close>×</button></div>
+<div class="profile-card"><div class="profile-avatar" id="profileAvatar">G</div><div><strong id="profileName">Guest</strong><div class="api-note" id="profileEmail" style="margin:2px 0 0"></div></div></div>
+<div class="setting"><span>Conversations saved</span><b id="profileCount">0</b></div>
+<button class="share" id="logoutBtn" style="width:100%;margin-top:12px;background:linear-gradient(140deg,#e0577f,#b8455f)!important">Log out</button></div></div>
+<div class="voice-overlay" id="voiceOverlay" aria-hidden="true"><div class="voice-inner">
+<button class="voice-close" id="voiceClose" aria-label="Close voice mode"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<div class="voice-orb" id="voiceOrb"><span class="vo-ring vo-r1"></span><span class="vo-ring vo-r2"></span><span class="vo-ring vo-r3"></span><span class="vo-core nova-orb alive"><span class="orb-eyes"></span></span></div>
+<div class="voice-state" id="voiceState">Tap to start</div>
+<div class="voice-caption" id="voiceCaption"></div>
+<div class="voice-controls"><button class="voice-btn" id="voiceMic" title="Start / pause listening"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button class="voice-btn" id="voiceStop" title="Stop speaking"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const $=q=>document.querySelector(q), $$=q=>[...document.querySelectorAll(q)], esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const storage={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},clear(){try{localStorage.clear()}catch(e){}}};
+const seed=[{id:'welcome',title:'A calm creative companion',updated:Date.now(),messages:[{role:'user',text:'Can you help me imagine a beautiful app idea?'},{role:'ai',text:'Of course. Tell me the feeling you want people to carry with them — then we’ll give that feeling a shape.'},{role:'user',text:'A calm creative companion — like a moonlit garden, but intelligent.'},{role:'ai',text:'I love that. Pearl glass, gentle botanical forms, and an interface that feels alive without asking for attention.'}]}];
+/* ---- account state (local, browser-only accounts; optional) ---- */
+let USER=(()=>{try{return JSON.parse(storage.get('nova-user')||'null')}catch{return null}})();
+const chatsKey=()=>USER?('nova-chats:'+USER.email):'nova-chats';
+const activeKey=()=>USER?('nova-active:'+USER.email):'nova-active';
+let chats=(()=>{try{return JSON.parse(storage.get(chatsKey())||'null')}catch{return null}})()||JSON.parse(JSON.stringify(seed)), active=storage.get(activeKey())||chats[0].id, pending=[], api=(()=>{try{return JSON.parse(storage.get('nova-api')||'{}')}catch{return {}}})();
+const form=$('#form'),input=$('#input'),msgs=$('#messages'),scroll=$('#scroll'),history=$('#history');
+function save(){storage.set(chatsKey(),JSON.stringify(chats));storage.set(activeKey(),active)}
+function current(){return chats.find(c=>c.id===active)||chats[0]}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+function renderHistory(){history.innerHTML='<div class="day"><h4>Your conversations</h4>'+chats.sort((a,b)=>b.updated-a.updated).map(c=>`<button data-id="${c.id}" title="Double-click to rename">${esc(c.title)}</button>`).join('')+'</div>';history.querySelectorAll('button').forEach(b=>{b.onclick=()=>{active=b.dataset.id;save();renderChat()};b.ondblclick=()=>{let n=prompt('Rename conversation',current().title);if(n){current().title=n.trim();save();renderHistory()}}})}
+/* Liquid-glass bubble icon set (inline SVGs) */
+const ICN={
+  copy:'<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/></svg>',
+  regen:'<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>',
+  like:'<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.4 2 4.8 5.4 4.5 7.6 4.3 9.2 5.7 12 8c2.8-2.3 4.4-3.7 6.6-3.5C22 4.8 23.6 8.4 22 11.7 19.5 16.4 12 21 12 21Z"/></svg>',
+  del:'<svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>',
+  nf:'<span class="orb-eyes"></span>',
+  you:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>'
+};
+function markup(m,i){
+  const body=esc(m.text||'')+(m.image?`<img class="generated-img" src="${esc(m.image)}" alt="AI-generated: ${esc(m.prompt||'creative image')}" loading="lazy">`:'');
+  const liked=m.liked?' liked':'';
+  const copyBtn=`<button data-copy="${i}" title="Copy" aria-label="Copy">${ICN.copy}</button>`;
+  const likeBtn=`<button class="likeBtn${liked}" data-like="${i}" title="Like" aria-label="Like">${ICN.like}</button>`;
+  const delBtn=`<button data-delete="${i}" title="Delete" aria-label="Delete">${ICN.del}</button>`;
+  const regenBtn=`<button data-regen="${i}" title="Regenerate" aria-label="Regenerate">${ICN.regen}</button>`;
+  if(m.role==='user'){
+    return `<div class="message user"><div><div class="bubble">${body}</div><div class="time">Now <span class="message-actions">${copyBtn}${delBtn}</span></div></div><div class="mini you" title="You">${ICN.you}</div></div>`;
+  }
+  return `<div class="message"><div class="mini nf nova-orb" title="Nova Flora">${ICN.nf}</div><div><div class="ai-label">Nova Flora</div><div class="bubble">${body}</div><div class="time">Nova response <span class="message-actions">${copyBtn}${regenBtn}${likeBtn}${delBtn}</span></div></div></div>`;
+}
+function renderChat(){let c=current();msgs.innerHTML=c.messages.length?c.messages.map(markup).join(''):`<div class="welcome"><div class="mini" style="margin:auto;width:44px;height:44px">NF</div><h2>What would you like to grow?</h2><p>Your conversations stay privately in this browser.</p><div class="quick-actions"><button>Plan my day</button><button>Create a moodboard</button><button>Write something beautiful</button></div></div>`;$$('.quick-actions button').forEach(b=>b.onclick=()=>{input.value=b.textContent;input.focus()});msgs.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(c.messages[+b.dataset.copy].text);toast('Copied')});msgs.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{c.messages.splice(+b.dataset.delete,1);save();renderChat()});msgs.querySelectorAll('[data-like]').forEach(b=>b.onclick=()=>{const m=c.messages[+b.dataset.like];m.liked=!m.liked;b.classList.toggle('liked',m.liked);save();toast(m.liked?'Liked ♥':'Removed like')});msgs.querySelectorAll('[data-regen]').forEach(b=>b.onclick=()=>regenerate(+b.dataset.regen));renderHistory();scroll.scrollTop=scroll.scrollHeight}
+const SYSTEM=`You are Nova Flora, a graceful, intelligent, comforting and creative AI companion. Be helpful first; the calm botanical flavor is seasoning, not the meal. Write in natural prose with concise paragraphs; avoid heavy lists or bolding unless asked or truly needed. Keep replies concise unless depth is requested, and ask at most one clarifying question per reply. Never create romantic or sexual content involving a minor, or anything that could endanger a child; refuse instantly. Do not help build weapons, explosives, or malware, and avoid actionable self-harm or illicit-drug dosing detail; if someone is in distress, respond with care and keep information general. Do not diagnose anyone's mental state. For legal, medical, or financial questions, give factual grounding rather than confident directives and note you are not a professional. Own mistakes plainly. You run on no-key community AI gateways (Pollinations.ai and LLM7.io), not any single named company's official model, and you have no persistent memory beyond this visible conversation; be honest about both if asked, and never claim tools or memories you do not have.`;
+async function apiFetch(url,options={}){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),(options.timeout||30000));try{return await fetch(url,{...options,signal:controller.signal})}finally{clearTimeout(timer)}}
+function pickModel(){const val=$('#activeModel').value;const m=resolveModel(val);if(m)return m;const[provider,...rest]=val.split(':');return{provider:provider||'pollinations',id:rest.join(':'),api:rest.join(':'),tag:'free',cat:'chat'}}
+/* --- Pollinations: no-auth GET with prompt URL-encoded into the path --- */
+async function askPollinations(history,model){
+ const memory=history.map(m=>(m.role==='assistant'?'Nova Flora':'User')+': '+m.content).join('\n');
+ const prompt=`System: ${SYSTEM}\n\n${memory}\n\nNova Flora:`;
+ const enc=encodeURIComponent(prompt),encModel=encodeURIComponent(model.api||model.id);
+ const key=(api.pollKey||'').trim();
+ const keyParam=key?('&key='+encodeURIComponent(key)):'';
+ const headers=key?{Authorization:'Bearer '+key}:{};
+ const urls=[
+  'https://text.pollinations.ai/'+enc+'?model='+encModel+keyParam,
+  'https://gen.pollinations.ai/text/'+enc+'?model='+encModel+keyParam
+ ];
+ let lastStatus=0,netErr=false;
+ for(const u of urls){
+  try{
+   const r=await apiFetch(u,{headers});
+   const t=(await r.text()).trim();
+   if(r.ok&&t)return t;
+   lastStatus=r.status;
+  }catch(e){netErr=true}
+ }
+ if(model.tag==='paid'&&!key)throw new Error("'"+model.id+"' is a paid Pollinations model — add a Pollinations key in Settings (enter.pollinations.ai), or pick a free model.");
+ if(netErr)throw new Error('NETWORK: could not reach Pollinations (blocked, offline, or CORS).');
+ if(lastStatus===429)throw new Error('Pollinations is rate-limiting (HTTP 429). Wait a moment or pick another model.');
+ throw new Error('Pollinations request failed (HTTP '+(lastStatus||'?')+').');
+}
+/* --- LLM7: OpenAI-compatible JSON POST, gets full system prompt --- */
+async function askLLM7(history,model){
+ const messages=[{role:'system',content:SYSTEM},...history];
+ const token=(api.llm7Key||'').trim()||'unused';
+ let r;
+ try{
+  r=await apiFetch('https://api.llm7.io/v1/chat/completions',{
+   method:'POST',
+   headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},
+   body:JSON.stringify({model:model.api||model.id,messages,temperature:0.85})
+  });
+ }catch(e){throw new Error('NETWORK: could not reach LLM7 (blocked, offline, or CORS).')}
+ let d=null;try{d=await r.json()}catch(e){}
+ if(!r.ok||(d&&d.error)){
+  if(model.tag==='paid'&&token==='unused')throw new Error("'"+model.id+"' is a paid LLM7 model — add an LLM7 token in Settings (dash.llm7.io), or pick a free model.");
+  if(r.status===429)throw new Error('LLM7 free tier is rate-limiting (HTTP 429). Wait a moment, add a token, or pick another model.');
+  throw new Error((d&&d.error&&(d.error.message||d.error))||('LLM7 request failed (HTTP '+r.status+').'));
+ }
+ const out=d&&d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+ if(!out)throw new Error('LLM7 returned an empty response.');
+ return out.trim();
+}
+/* Fallback chain: after the chosen model, try a few reliable free ones so a
+   single rate-limit / hiccup doesn't dead-end the conversation. */
+const RELIABLE_FALLBACKS=[
+ {provider:'pollinations',model:{id:'openai-fast',api:'openai-fast',tag:'free'}},
+ {provider:'pollinations',model:{id:'openai',api:'openai',tag:'free'}},
+ {provider:'llm7',model:{id:'default',api:'default',tag:'free'}},
+ {provider:'pollinations',model:{id:'mistral',api:'mistral',tag:'free'}}
+];
+async function realReply(c){
+ const history=c.messages.slice(-18).map(m=>({role:m.role==='ai'?'assistant':'user',content:m.text||''}));
+ const chosen=pickModel();
+ let provider=chosen.provider;
+ if(api.provider==='pollinations')provider='pollinations';
+ else if(api.provider==='llm7')provider='llm7';
+ // Build attempt list: the chosen model first, then reliable free fallbacks
+ // (skipped when the user forced a specific provider in Settings).
+ const attempts=[{provider,model:chosen}];
+ if(api.provider!=='pollinations'&&api.provider!=='llm7'){
+  RELIABLE_FALLBACKS.forEach(f=>{if(!(f.provider===provider&&f.model.id===(chosen.api||chosen.id)))attempts.push(f)});
+ }
+ let firstErr=null,netCount=0;
+ for(const a of attempts){
+  try{
+   return a.provider==='llm7'?await askLLM7(history,a.model):await askPollinations(history,a.model);
+  }catch(e){
+   if(!firstErr)firstErr=e;
+   if(e.message&&e.message.startsWith('NETWORK:'))netCount++;
+  }
+ }
+ // If everything failed on network, it's almost certainly the sandboxed preview.
+ if(netCount>=attempts.length)throw new Error("Can't reach the AI providers from here. The in-app preview has no internet — download this file and open it in a normal browser tab. (If it still fails there, your network may block Pollinations/LLM7.)");
+ throw firstErr||new Error('All models failed. Try again shortly.');
+}
+async function send(v){v=v.trim();if(!v)return;let c=current();c.messages.push({role:'user',text:v+(pending.length?'\n\nAttached: '+pending.map(x=>x.name).join(', '):'')});if(c.messages.length===1)c.title=v.slice(0,34);c.updated=Date.now();pending=[];renderAttachments();save();renderChat();input.value='';let typing=document.createElement('div');typing.className='message';typing.innerHTML=SPARK_SVG+'<div class="mini nf nova-orb" title="Nova Flora">'+ICN.nf+'</div><div><div class="ai-label">Nova Flora</div><div class="bubble"><div class="g-thinking"><span class="g-spark">'+SPARK_ICON+'</span><span class="g-shimmer">Nova is thinking…</span></div><div class="g-skeleton"><i></i><i></i><i></i></div></div></div>';msgs.append(typing);scroll.scrollTop=scroll.scrollHeight;try{const answer=await realReply(c);typing.remove();await streamReply(c,answer)}catch(err){typing.remove();c.messages.push({role:'ai',text:(err&&err.message)?('⚠ '+err.message):'The selected model could not be reached. Try another model from the selector or add its API key in Settings.'});c.updated=Date.now();save();renderChat()}}
+/* Regenerate an AI reply: drop it, re-ask from the preceding user turn. */
+async function regenerate(idx){
+  const c=current();const m=c.messages[idx];
+  if(!m||m.role!=='ai')return;
+  // find the user message just before this AI reply
+  let uIdx=idx-1;while(uIdx>=0&&c.messages[uIdx].role!=='user')uIdx--;
+  if(uIdx<0){toast('Nothing to regenerate from');return;}
+  c.messages.splice(idx,1);save();renderChat();
+  let typing=document.createElement('div');typing.className='message';
+  typing.innerHTML=SPARK_SVG+'<div class="mini nf nova-orb" title="Nova Flora">'+ICN.nf+'</div><div><div class="ai-label">Nova Flora</div><div class="bubble"><div class="g-thinking"><span class="g-spark">'+SPARK_ICON+'</span><span class="g-shimmer">Regenerating…</span></div><div class="g-skeleton"><i></i><i></i><i></i></div></div></div>';
+  msgs.append(typing);scroll.scrollTop=scroll.scrollHeight;
+  try{const answer=await realReply(c);typing.remove();await streamReply(c,answer);toast('Regenerated');}
+  catch(err){typing.remove();c.messages.push({role:'ai',text:(err&&err.message)?('⚠ '+err.message):'Could not regenerate. Try again or pick another model.'});c.updated=Date.now();save();renderChat();}
+}
+/* Gemini-style sparkle icon + shared SVG gradient def (injected once) */
+const SPARK_ICON='<svg viewBox="0 0 24 24"><path class="g-star" d="M12 2c.5 4.5 2.9 6.9 7.4 7.4-4.5.5-6.9 2.9-7.4 7.4-.5-4.5-2.9-6.9-7.4-7.4C9.1 8.9 11.5 6.5 12 2Z"/></svg>';
+const SPARK_SVG='<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285f4"/><stop offset=".4" stop-color="#9b72cb"/><stop offset=".7" stop-color="#d96570"/><stop offset="1" stop-color="#f2a60c"/></linearGradient></defs></svg>';
+/* Stream an AI answer word-by-word into a fresh bubble, then commit to memory */
+async function streamReply(c,answer){
+  const wrap=document.createElement('div');wrap.className='message';
+  wrap.innerHTML='<div class="mini">NF</div><div><div class="ai-label">Nova Flora</div><div class="bubble"><span class="g-body"></span><span class="g-caret"></span></div></div>';
+  msgs.append(wrap);
+  const body=wrap.querySelector('.g-body'),caret=wrap.querySelector('.g-caret');
+  const nearBottom=()=>scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight<160;
+  const tokens=String(answer).split(/(\s+)/); // keep whitespace tokens
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){body.textContent=answer;}
+  else{
+    for(let i=0;i<tokens.length;i++){
+      const tk=tokens[i];
+      if(/^\s+$/.test(tk)){body.appendChild(document.createTextNode(tk));}
+      else{const s=document.createElement('span');s.className='g-word';s.style.animationDelay='0s';s.textContent=tk;body.appendChild(s);}
+      if(i%3===0&&nearBottom())scroll.scrollTop=scroll.scrollHeight;
+      if(!/^\s+$/.test(tk))await new Promise(r=>setTimeout(r,18));
+    }
+  }
+  caret.remove();
+  c.messages.push({role:'ai',text:answer});
+  c.updated=Date.now();save();renderChat();
+}
+form.addEventListener('submit',e=>{e.preventDefault();send(input.value)});$('#sendBtn').addEventListener('click',e=>{e.preventDefault();send(input.value)});input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send(input.value)}});
+function newChat(){active='c'+Date.now();chats.unshift({id:active,title:'New conversation',updated:Date.now(),messages:[]});save();renderChat();input.focus();toast('New conversation')}
+$('#newBtn').onclick=newChat;$('#sideNewChat').onclick=newChat;$('.logo').onclick=newChat;
+$('#exportBtn').onclick=()=>{let c=current(),text='# '+c.title+'\n\n'+c.messages.map(m=>(m.role==='ai'?'Nova Flora':'You')+': '+(m.text||'')).join('\n\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/markdown'}));a.download=c.title.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.md';a.click();URL.revokeObjectURL(a.href);toast('Conversation exported')};
+function open(id){$(id).classList.add('open')}$$('[data-close]').forEach(b=>b.onclick=()=>b.closest('.modal').classList.remove('open'));$$('.modal').forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove('open')});$('#searchBtn').onclick=()=>{open('#searchModal');$('#searchInput').focus();search('')};$('#settingsBtn').onclick=()=>open('#settingsModal');
+/* ---- Dark / light theme (persisted; respects OS preference on first run) ---- */
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);storage.set('nova-theme',t)}
+const savedTheme=storage.get('nova-theme')||((window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light');
+applyTheme(savedTheme);
+$('#themeBtn').onclick=()=>{const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';applyTheme(next);toast(next==='dark'?'Dark mode':'Light mode')};
+function search(q){q=q.toLowerCase();$('#results').innerHTML=chats.filter(c=>c.title.toLowerCase().includes(q)||c.messages.some(m=>m.text.toLowerCase().includes(q))).map(c=>`<button class="result" data-id="${c.id}">${esc(c.title)}<small>${c.messages.length} messages</small></button>`).join('')||'<p>No conversations found.</p>';$$('.result').forEach(b=>b.onclick=()=>{active=b.dataset.id;save();renderChat();$('#searchModal').classList.remove('open')})}$('#searchInput').oninput=e=>search(e.target.value);
+$$('.toggle').forEach(t=>t.onclick=()=>{t.classList.toggle('on');if(t.dataset.setting==='reduced')document.documentElement.style.setProperty('scroll-behavior',t.classList.contains('on')?'auto':'smooth');if(t.dataset.setting==='compact')document.body.style.fontSize=t.classList.contains('on')?'11px':'12px'});function loadApiForm(){$('#provider').value=api.provider||'auto';$('#llm7Key').value=api.llm7Key||'';$('#pollKey').value=api.pollKey||''}loadApiForm();$('#saveApi').onclick=()=>{api={provider:$('#provider').value,llm7Key:$('#llm7Key').value.trim(),pollKey:$('#pollKey').value.trim()};storage.set('nova-api',JSON.stringify(api));$('#settingsModal').classList.remove('open');toast('API settings saved');loadModels()};
+$('#clearBtn').onclick=()=>{if(confirm('Delete every conversation saved for '+(USER?USER.name:'guest')+'?')){storage.set(chatsKey(),'');chats=JSON.parse(JSON.stringify(seed));active=chats[0].id;save();renderChat();$('#settingsModal').classList.remove('open')}};
+/* =================== LOGIN / SIGNUP (local accounts) =================== */
+async function hashPass(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('nova::'+s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return 'p'+btoa(unescape(encodeURIComponent(s)))}}
+function users(){try{return JSON.parse(storage.get('nova-users')||'{}')}catch{return {}}}
+function saveUsers(u){storage.set('nova-users',JSON.stringify(u))}
+let authMode='login';
+function setAuthMode(m){authMode=m;
+  $$('.auth-tab').forEach(t=>t.classList.toggle('active',t.dataset.authtab===m));
+  $('#nameRow').style.display=m==='signup'?'grid':'none';
+  $('#authTitle').textContent=m==='signup'?'Create your account':'Welcome back';
+  $('#authSub').textContent=m==='signup'?'Sign up to keep your conversations on this device.':'Log in to load your saved conversations.';
+  $('#authSubmit').textContent=m==='signup'?'Sign up':'Log in';
+  $('#authPass').setAttribute('autocomplete',m==='signup'?'new-password':'current-password');
+  $('#authErr').style.display='none';
+}
+$$('.auth-tab').forEach(t=>t.onclick=()=>setAuthMode(t.dataset.authtab));
+function authErr(msg){const e=$('#authErr');e.textContent=msg;e.style.display='block'}
+function reloadForUser(){
+  chats=(()=>{try{return JSON.parse(storage.get(chatsKey())||'null')}catch{return null}})()||JSON.parse(JSON.stringify(seed));
+  active=storage.get(activeKey())||chats[0].id;renderChat();
+}
+function refreshAccountUI(){
+  const btn=$('#accountBtn');
+  if(USER){btn.classList.add('authed');btn.textContent=(USER.name||USER.email)[0].toUpperCase();btn.title=USER.name+' — account';}
+  else{btn.classList.remove('authed');btn.innerHTML='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>';btn.title='Account';}
+}
+$('#authForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('#authEmail').value.trim().toLowerCase(), pass=$('#authPass').value, name=$('#authName').value.trim();
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return authErr('Enter a valid email address.');
+  if(pass.length<6)return authErr('Password must be at least 6 characters.');
+  const db=users();const ph=await hashPass(pass);
+  if(authMode==='signup'){
+    if(db[email])return authErr('An account with that email already exists. Try logging in.');
+    db[email]={name:name||email.split('@')[0],email,pass:ph,created:Date.now()};saveUsers(db);
+    USER={name:db[email].name,email};storage.set('nova-user',JSON.stringify(USER));
+    toast('Welcome, '+USER.name+'!');
+  }else{
+    if(!db[email])return authErr('No account found for that email. Sign up instead.');
+    if(db[email].pass!==ph)return authErr('Incorrect password.');
+    USER={name:db[email].name,email};storage.set('nova-user',JSON.stringify(USER));
+    toast('Welcome back, '+USER.name+'!');
+  }
+  $('#authModal').classList.remove('open');$('#authForm').reset();
+  refreshAccountUI();reloadForUser();
+};
+function openProfile(){
+  $('#profileName').textContent=USER.name;$('#profileEmail').textContent=USER.email;
+  $('#profileAvatar').textContent=(USER.name||USER.email)[0].toUpperCase();
+  $('#profileCount').textContent=chats.length;
+  open('#profileModal');
+}
+$('#accountBtn').onclick=()=>{if(USER)openProfile();else{setAuthMode('login');open('#authModal');$('#authEmail').focus();}};
+$('#logoutBtn').onclick=()=>{save();USER=null;storage.set('nova-user','');$('#profileModal').classList.remove('open');refreshAccountUI();reloadForUser();toast('Logged out (guest mode)');};
+refreshAccountUI();
+$('#attachBtn').onclick=()=>$('#fileInput').click();$('#imageBtn').onclick=()=>generateImage();$('#fileInput').onchange=e=>{pending=[...e.target.files].slice(0,5);renderAttachments()};function renderAttachments(){let old=$('.attachments');if(old)old.remove();if(!pending.length)return;let d=document.createElement('div');d.className='attachments';d.innerHTML=pending.map(f=>`<span class="chip">✦ ${esc(f.name)}</span>`).join('');$('.composer-wrap').prepend(d)}
+async function generateImage(){let prompt=input.value.trim()||window.prompt('Describe the image you want Nova Flora to create:');if(!prompt)return;let c=current();c.messages.push({role:'user',text:'Create an image: '+prompt});const seed=Math.floor(Math.random()*2147483647);const pk=(api.pollKey||'').trim();let url='https://image.pollinations.ai/prompt/'+encodeURIComponent(prompt+', elegant cinematic composition, premium quality')+'?width=768&height=768&seed='+seed+'&nologo=true'+(pk?('&key='+encodeURIComponent(pk)):'');c.messages.push({role:'ai',text:'I grew this visual for you with Pollinations:',image:url,prompt});c.updated=Date.now();save();renderChat();toast('Generating image…')}
+/* =================== FULL-SCREEN VOICE MODE =================== */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const VM={active:false,recog:null,busy:false,wantListen:false};
+const vOverlay=$('#voiceOverlay'),vOrb=$('#voiceOrb'),vState=$('#voiceState'),vCap=$('#voiceCaption'),vMic=$('#voiceMic');
+function vSetState(s,label){vOrb.classList.remove('listening','thinking','speaking');if(s)vOrb.classList.add(s);if(label!==undefined)vState.textContent=label;vMic.classList.toggle('active',s==='listening');}
+function pickVoice(){const vs=speechSynthesis.getVoices();if(!vs.length)return null;
+  return vs.find(v=>/en-(GB|IN)/i.test(v.lang)&&/female|zira|samantha|aria|libby/i.test(v.name))||vs.find(v=>/^en/i.test(v.lang))||vs[0];}
+function speak(text){return new Promise(res=>{
+  if(!('speechSynthesis'in window)||!text){res();return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/[*_`#>]/g,''));
+  const v=pickVoice();if(v)u.voice=v;u.rate=1.02;u.pitch=1.02;u.lang=(v&&v.lang)||'en-US';
+  u.onend=res;u.onerror=res;
+  vSetState('speaking','Speaking…');vCap.textContent=text.length>240?text.slice(0,240)+'…':text;
+  speechSynthesis.speak(u);
+});}
+function startListen(){
+  if(!SR){vState.textContent='Speech recognition not supported here';return;}
+  if(VM.busy)return;
+  try{
+    const r=new SR();VM.recog=r;r.lang='en-IN';r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
+    let finalText='';
+    r.onstart=()=>{VM.busy=true;vSetState('listening','Listening…');vCap.textContent='';};
+    r.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=t;else interim+=t;}vCap.textContent=finalText+interim;};
+    r.onerror=ev=>{VM.busy=false;if(ev.error==='not-allowed'||ev.error==='service-not-allowed'){vSetState(null,'Microphone blocked');vCap.textContent='Allow mic access in your browser to use voice mode.';VM.wantListen=false;}else if(VM.wantListen){vSetState(null,'Tap the mic to try again');}};
+    r.onend=async()=>{VM.busy=false;const said=finalText.trim();
+      if(said&&VM.active){await handleVoiceTurn(said);}
+      else if(VM.wantListen&&VM.active){startListen();} /* nothing heard, keep listening */
+    };
+    r.start();
+  }catch(e){VM.busy=false;vSetState(null,'Could not start microphone');}
+}
+async function handleVoiceTurn(text){
+  vSetState('thinking','Thinking…');vCap.textContent=text;
+  const c=current();
+  c.messages.push({role:'user',text});if(c.messages.length===1)c.title=text.slice(0,34);c.updated=Date.now();save();renderChat();
+  try{
+    const answer=await realReply(c);
+    c.messages.push({role:'ai',text:answer});c.updated=Date.now();save();renderChat();
+    await speak(answer);
+  }catch(err){
+    const msg=(err&&err.message)?err.message:'I could not reach the model.';
+    c.messages.push({role:'ai',text:'⚠ '+msg});save();renderChat();
+    await speak('Sorry, '+msg);
+  }
+  if(VM.active&&VM.wantListen){vSetState('listening','Listening…');startListen();}
+  else vSetState(null,'Tap the mic to speak');
+}
+function openVoice(){
+  VM.active=true;VM.wantListen=true;vOverlay.classList.add('open');vOverlay.setAttribute('aria-hidden','false');
+  if('speechSynthesis'in window)speechSynthesis.getVoices(); // warm up voices
+  if(!SR){vSetState(null,'Speech input unavailable');vCap.textContent='Your browser lacks the Web Speech API. Try Chrome or Edge.';return;}
+  vSetState(null,'Getting ready…');
+  setTimeout(()=>{if(VM.active)startListen();},350);
+}
+function closeVoice(){
+  VM.active=false;VM.wantListen=false;
+  try{if(VM.recog)VM.recog.abort();}catch(e){}
+  if('speechSynthesis'in window)speechSynthesis.cancel();
+  vOverlay.classList.remove('open');vOverlay.setAttribute('aria-hidden','true');vSetState(null,'Tap to start');vCap.textContent='';
+}
+$('#voiceBtn').onclick=openVoice;
+$('#voiceClose').onclick=closeVoice;
+vMic.onclick=()=>{ if(VM.busy){VM.wantListen=false;try{VM.recog&&VM.recog.stop();}catch(e){} vSetState(null,'Paused — tap mic to listen'); } else { VM.wantListen=true; startListen(); } };
+$('#voiceStop').onclick=()=>{if('speechSynthesis'in window)speechSynthesis.cancel();if(VM.active&&VM.wantListen){vSetState('listening','Listening…');startListen();}else vSetState(null,'Stopped');};
+$('#voiceOrb').onclick=()=>{if(!VM.busy&&VM.active){VM.wantListen=true;startListen();}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&VM.active)closeVoice();});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();$('#searchBtn').click()}if((e.metaKey||e.ctrlKey)&&e.key==='n'){e.preventDefault();newChat()}if(e.key==='Escape')$$('.modal').forEach(m=>m.classList.remove('open'))});
+/* ---- FULL MODEL CATALOG (ported from the NOVA Cinema terminal build) ----
+   Each entry: {id: displayName, api: realApiId, cat, tag, note}
+   tag "paid" => auth model, needs a provider key entered in Settings.        */
+const CATALOG={
+ pollinations:{
+  noauth:[
+   {id:'gpt-5-nano',api:'openai-fast',cat:'chat',tag:'free',note:'Default cinematic alias → openai-fast'},
+   {id:'openai-fast',api:'openai-fast',cat:'chat',tag:'free',note:'Fast anonymous GPT-class model'},
+   {id:'openai',api:'openai',cat:'chat',tag:'free',note:'Standard OpenAI-compatible chat model'},
+   {id:'openai-large',api:'openai-large',cat:'chat',tag:'rate-limited',note:'Larger OpenAI-class model, heavier queue'},
+   {id:'gpt-oss',api:'openai-fast',cat:'chat',tag:'free',note:'Open alias mapped to openai-fast'},
+   {id:'mistral',api:'mistral',cat:'chat',tag:'free',note:'Mistral general purpose chat model'},
+   {id:'mistral-large',api:'mistral-large',cat:'reasoning',tag:'rate-limited',note:'Premium multilingual reasoning model'},
+   {id:'deepseek',api:'deepseek',cat:'chat',tag:'free',note:'DeepSeek V3-class flash model'},
+   {id:'deepseek-pro',api:'deepseek-pro',cat:'reasoning',tag:'rate-limited',note:'Deeper DeepSeek reasoning variant'},
+   {id:'glm',api:'glm',cat:'reasoning',tag:'free',note:'Z.ai GLM long-context agentic model'},
+   {id:'qwen-coder-large',api:'qwen-coder-large',cat:'code',tag:'free',note:'Qwen3 Coder for code generation'},
+   {id:'qwen-large',api:'qwen-large',cat:'chat',tag:'free',note:'Qwen flagship MoE chat model'},
+   {id:'qwen-vision',api:'qwen-vision',cat:'vision',tag:'free',note:'Vision-language reasoning model'},
+   {id:'kimi',api:'kimi',cat:'reasoning',tag:'free',note:'Moonshot Kimi agentic CoT model'},
+   {id:'nova-fast',api:'nova-fast',cat:'chat',tag:'free',note:'Ultra-fast, ultra-cheap Nova Micro'},
+   {id:'nova',api:'nova',cat:'reasoning',tag:'free',note:'Nova Lite, 1M context + reasoning'},
+   {id:'minimax',api:'minimax',cat:'code',tag:'free',note:'MiniMax coding & agentic model'},
+   {id:'gemini',api:'gemini',cat:'chat',tag:'rate-limited',note:'Gemini flash-class model'}
+  ],
+  auth:[
+   {id:'gpt-5.4',api:'gpt-5.4',cat:'chat',tag:'paid',note:'Flagship GPT-5.4, needs Pollinations key'},
+   {id:'gpt-5.4-mini',api:'gpt-5.4-mini',cat:'chat',tag:'paid',note:'Smaller GPT-5.4, needs Pollinations key'},
+   {id:'claude',api:'claude',cat:'chat',tag:'paid',note:'Claude Sonnet class, needs Pollinations key'},
+   {id:'claude-sonnet-5',api:'claude-sonnet-5',cat:'reasoning',tag:'paid',note:'Claude Sonnet 5, needs Pollinations key'},
+   {id:'claude-opus-4.6',api:'claude-opus-4.6',cat:'reasoning',tag:'paid',note:'Claude Opus 4.6, tools'},
+   {id:'gemini-large',api:'gemini-large',cat:'reasoning',tag:'paid',note:'Gemini Pro, 1M context, tools+search'},
+   {id:'gemini-3-flash',api:'gemini-3-flash',cat:'chat',tag:'paid',note:'Gemini 3 Flash, needs Pollinations key'},
+   {id:'grok',api:'grok',cat:'chat',tag:'paid',note:'xAI Grok, needs Pollinations key'},
+   {id:'perplexity',api:'perplexity',cat:'reasoning',tag:'paid',note:'Perplexity Sonar with web search'},
+   {id:'kimi-code',api:'kimi-code',cat:'code',tag:'paid',note:'Moonshot Kimi coding variant'},
+   {id:'llama-maverick',api:'llama-maverick',cat:'chat',tag:'paid',note:'Meta Llama 4 Maverick'}
+  ]
+ },
+ llm7:{
+  noauth:[
+   {id:'default',api:'default',cat:'chat',tag:'free',note:'Anonymous default router'},
+   {id:'fast',api:'fast',cat:'chat',tag:'free',note:'Anonymous fast router'},
+   {id:'gpt-4.1-nano-2025-04-14',api:'gpt-4.1-nano-2025-04-14',cat:'chat',tag:'free',note:'OpenAI-class nano, text+image'},
+   {id:'gpt-4o-mini-2024-07-18',api:'gpt-4o-mini-2024-07-18',cat:'chat',tag:'free',note:'GPT-4o mini, text+image'},
+   {id:'gpt-o4-mini-2025-04-16',api:'gpt-o4-mini-2025-04-16',cat:'reasoning',tag:'free',note:'o4-mini reasoning, text+image'},
+   {id:'deepseek-r1-0528',api:'deepseek-r1-0528',cat:'reasoning',tag:'free',note:'DeepSeek R1 reasoning model'},
+   {id:'deepseek-v3-0324',api:'deepseek-v3-0324',cat:'chat',tag:'free',note:'DeepSeek V3 general chat model'},
+   {id:'gemini-2.5-flash-lite',api:'gemini-2.5-flash-lite',cat:'vision',tag:'free',note:'Gemini flash-lite, text+vision'},
+   {id:'qwen2.5-coder-32b-instruct',api:'qwen2.5-coder-32b-instruct',cat:'code',tag:'free',note:'Qwen2.5 Coder 32B for code tasks'},
+   {id:'mistral-small-3.1-24b-instruct-2503',api:'mistral-small-3.1-24b-instruct-2503',cat:'chat',tag:'free',note:'Mistral Small 24B instruct model'},
+   {id:'codestral-latest',api:'codestral-latest',cat:'code',tag:'rate-limited',note:'Anonymous turbo coding model'},
+   {id:'l3-70b-euryale-v2.1',api:'l3-70b-euryale-v2.1',cat:'roleplay',tag:'free',note:'Llama3 70B roleplay-tuned model'},
+   {id:'midnight-rose-70b-v2.0.3',api:'midnight-rose-70b-v2.0.3',cat:'roleplay',tag:'free',note:'Creative writing / roleplay model'},
+   {id:'rtist',api:'rtist',cat:'chat',tag:'free',note:'Community creative chat persona'},
+   {id:'mirexa',api:'mirexa',cat:'vision',tag:'free',note:'Mirexa text+image assistant'}
+  ],
+  auth:[
+   {id:'pro',api:'pro',cat:'chat',tag:'paid',note:'LLM7 Pro router, needs dash.llm7.io token + Pro plan'},
+   {id:'gpt-4o',api:'gpt-4o',cat:'chat',tag:'paid',note:'Full GPT-4o, higher-tier token recommended'},
+   {id:'deepseek-r1',api:'deepseek-r1',cat:'reasoning',tag:'paid',note:'DeepSeek R1 full model, token recommended'},
+   {id:'qwen3-235b',api:'qwen3-235b',cat:'reasoning',tag:'paid',note:'Qwen3 235B flagship, token recommended'},
+   {id:'l3.3-ms-nevoria-70b',api:'l3.3-ms-nevoria-70b',cat:'roleplay',tag:'paid',note:'Llama 3.3 70B roleplay tune'},
+   {id:'open-mixtral-8x7b',api:'open-mixtral-8x7b',cat:'chat',tag:'paid',note:'Mixtral 8x7B MoE, token recommended'}
+  ]
+ }
+};
+// live-fetched extras keyed by provider (merged on top of the catalog)
+let LIVE={pollinations:[],llm7:[]};
+// flat lookup: "provider:id" -> entry, rebuilt each render
+let MODEL_INDEX={};
+function catalogFor(provider){
+ const c=CATALOG[provider]||{noauth:[],auth:[]};
+ const seen=new Set(),out=[];
+ [...c.noauth,...c.auth].forEach(m=>{seen.add(m.id.toLowerCase());out.push(m)});
+ (LIVE[provider]||[]).forEach(id=>{if(!seen.has(id.toLowerCase())){seen.add(id.toLowerCase());out.push({id,api:id,cat:'chat',tag:'free',note:'Live-listed model'})}});
+ return out;
+}
+function normalizeLive(data){if(!data)return[];const arr=Array.isArray(data)?data:(data.data||data.models||[]);return arr.map(x=>typeof x==='string'?x:(x.id||x.name)).filter(Boolean)}
+function resolveModel(value){return MODEL_INDEX[value]||null}
+async function loadModels(){
+ const sel=$('#activeModel'),btn=$('#refreshModels'),status=$('#modelStatus');
+ const chosen=storage.get('nova-model')||sel.value;
+ btn.classList.add('loading');status.className='model-status';status.querySelector('span').textContent='Loading live model catalogue…';
+ let liveOk=false;
+ // Best-effort live fetch straight from the providers (may be blocked by CORS).
+ try{const r=await apiFetch('https://text.pollinations.ai/models');if(r.ok){const d=await r.json();const ids=normalizeLive(d);if(ids.length){LIVE.pollinations=ids;liveOk=true}}}catch(e){}
+ try{const r=await apiFetch('https://api.llm7.io/v1/models',{headers:{Authorization:'Bearer '+(api.llm7Key||'unused')}});if(r.ok){const d=await r.json();const ids=normalizeLive(d);if(ids.length){LIVE.llm7=ids;liveOk=true}}}catch(e){}
+ const llm=catalogFor('llm7'),poll=catalogFor('pollinations');
+ MODEL_INDEX={};
+ const group=(label,provider,list)=>{const g=document.createElement('optgroup');g.label=label;
+  list.slice().sort((a,b)=>{const t=(a.tag==='paid')-(b.tag==='paid');return t||a.id.localeCompare(b.id)}).forEach(m=>{
+   const value=provider+':'+m.id;MODEL_INDEX[value]={...m,provider};
+   const o=document.createElement('option');o.value=value;
+   const badge=m.tag==='paid'?' · 🔒 paid':(m.tag==='rate-limited'?' · rate-limited':'');
+   o.textContent=m.id+badge;g.append(o)});
+  return g};
+ sel.innerHTML='';
+ sel.append(group('LLM7.io — '+llm.length+' models','llm7',llm),group('Pollinations — '+poll.length+' models','pollinations',poll));
+ if([...sel.options].some(o=>o.value===chosen))sel.value=chosen;
+ else sel.value=[...sel.options].find(o=>o.value==='pollinations:gpt-5-nano')?'pollinations:gpt-5-nano':(sel.options[0]&&sel.options[0].value);
+ btn.classList.remove('loading');
+ const total=llm.length+poll.length;
+ status.className='model-status '+(liveOk?'live':'partial');
+ status.querySelector('span').textContent=(liveOk?'Live catalogue':'Catalogue ready')+' · '+total+' models across 2 providers';
+}
+$('#activeModel').addEventListener('change',e=>{storage.set('nova-model',e.target.value);toast('Using '+e.target.options[e.target.selectedIndex].text)});$('#refreshModels').onclick=loadModels;loadModels();
+const scrollBtn=$('#scrollDown'),scrollUpBtn=$('#scrollUp');
+function updateScrollButtons(){scrollBtn.classList.add('show');const up=scroll.scrollTop>140;scrollUpBtn.classList.toggle('show',up)}
+scroll.addEventListener('scroll',updateScrollButtons);
+scrollBtn.onclick=()=>scroll.scrollTo({top:scroll.scrollHeight,behavior:'smooth'});
+scrollUpBtn.onclick=()=>scroll.scrollTo({top:0,behavior:'smooth'});
+updateScrollButtons();
+/* ---- Auto-fit the UI to the user's screen resolution ----
+   Only scales the root font-size fluidly. We deliberately do NOT zoom the
+   whole app: the app is locked to 100vh and its internal flex layout keeps
+   the composer pinned to the bottom while the conversation scrolls inside.
+   (An earlier zoom-to-fit measured the full chat height and pushed the
+   prompt box off-screen — removed.)                                       */
+function autoFit(){
+  const w=window.innerWidth, h=window.innerHeight;
+  let s=Math.min(w/1440, h/900);
+  s=Math.max(0.85, Math.min(s, 1.55));
+  const px=Math.max(10.5, Math.min(15.5, 12*s));
+  document.documentElement.style.fontSize=px.toFixed(2)+'px';
+  document.documentElement.style.setProperty('--ui-scale', s.toFixed(3));
+}
+function scheduleFit(){requestAnimationFrame(()=>requestAnimationFrame(autoFit));}
+scheduleFit();
+let _fitT;window.addEventListener('resize',()=>{clearTimeout(_fitT);_fitT=setTimeout(autoFit,60)});
+window.addEventListener('orientationchange',()=>setTimeout(autoFit,120));
+window.addEventListener('load',autoFit);
+renderChat();
+</script>
+<script>
+/* =====================================================================
+   NOVA WebGL SHADER BACKGROUND
+   A full-screen GLSL fragment shader painting animated liquid-glass
+   aurora/plasma. Theme-aware palette, mouse parallax, DPR-aware, pauses
+   when the tab is hidden, and falls back to the CSS background if WebGL
+   is unavailable or the context is lost.
+   ===================================================================== */
+(function(){
+  const canvas=document.getElementById('glCanvas');
+  if(!canvas)return;
+  let gl;
+  try{gl=canvas.getContext('webgl',{antialias:true,alpha:true,premultipliedAlpha:false})||canvas.getContext('experimental-webgl');}catch(e){}
+  if(!gl){/* leave the CSS background as the fallback */return;}
+
+  const VERT=`
+    attribute vec2 p;
+    void main(){ gl_Position=vec4(p,0.0,1.0); }
+  `;
+  /* Domain-warped fractal noise → soft flowing liquid bands, tinted by two
+     palette colors that we blend between. Adds a subtle glassy specular. */
+  const FRAG=`
+    precision highp float;
+    uniform vec2  u_res;
+    uniform float u_time;
+    uniform vec2  u_mouse;
+    uniform vec3  u_c1;   // deep base
+    uniform vec3  u_c2;   // mid glow
+    uniform vec3  u_c3;   // highlight
+    uniform float u_dark; // 1.0 dark, 0.0 light
+
+    // hash + value noise
+    float hash(vec2 p){ p=fract(p*vec2(123.34,345.45)); p+=dot(p,p+34.345); return fract(p.x*p.y); }
+    float noise(vec2 p){
+      vec2 i=floor(p), f=fract(p);
+      float a=hash(i), b=hash(i+vec2(1.,0.)), c=hash(i+vec2(0.,1.)), d=hash(i+vec2(1.,1.));
+      vec2 u=f*f*(3.-2.*f);
+      return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
+    }
+    float fbm(vec2 p){
+      float v=0.0, a=0.5;
+      for(int i=0;i<6;i++){ v+=a*noise(p); p*=2.02; a*=0.5; }
+      return v;
+    }
+    void main(){
+      vec2 uv=(gl_FragCoord.xy - 0.5*u_res)/u_res.y;
+      float t=u_time*0.06;
+      vec2 m=(u_mouse-0.5)*0.6;
+
+      // domain warp for the "liquid" flow
+      vec2 q=vec2(fbm(uv*1.6 + vec2(0.0,t)), fbm(uv*1.6 + vec2(5.2,-t)));
+      vec2 r=vec2(fbm(uv*1.6 + 3.0*q + vec2(1.7,9.2) + m + t*0.7),
+                  fbm(uv*1.6 + 3.0*q + vec2(8.3,2.8) - m - t*0.7));
+      float f=fbm(uv*1.8 + 3.5*r + t);
+
+      // build color from the palette
+      vec3 col=mix(u_c1,u_c2, clamp(f*1.4,0.0,1.0));
+      col=mix(col,u_c3, clamp(length(r)*0.85,0.0,1.0));
+
+      // flowing highlight ridges (glassy sheen)
+      float ridge=smoothstep(0.55,0.95, fbm(uv*2.4 + 4.0*r - t*1.3));
+      col+=u_c3*ridge*(0.18+0.12*u_dark);
+
+      // soft radial vignette so the UI reads on top
+      float vig=smoothstep(1.25,0.25,length(uv));
+      col*=mix(0.82,1.06,vig);
+
+      // gentle grain to avoid banding
+      col+=(hash(gl_FragCoord.xy+u_time)-0.5)*0.015;
+
+      gl_FragColor=vec4(col,1.0);
+    }
+  `;
+
+  function compile(type,src){
+    const s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn('shader',gl.getShaderInfoLog(s));return null;}
+    return s;
+  }
+  const vs=compile(gl.VERTEX_SHADER,VERT), fs=compile(gl.FRAGMENT_SHADER,FRAG);
+  if(!vs||!fs)return;
+  const prog=gl.createProgram();
+  gl.attachShader(prog,vs); gl.attachShader(prog,fs); gl.linkProgram(prog);
+  if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){console.warn('link',gl.getProgramInfoLog(prog));return;}
+  gl.useProgram(prog);
+
+  // full-screen triangle
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1, 3,-1, -1,3]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(prog,'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+  const U={
+    res:gl.getUniformLocation(prog,'u_res'),
+    time:gl.getUniformLocation(prog,'u_time'),
+    mouse:gl.getUniformLocation(prog,'u_mouse'),
+    c1:gl.getUniformLocation(prog,'u_c1'),
+    c2:gl.getUniformLocation(prog,'u_c2'),
+    c3:gl.getUniformLocation(prog,'u_c3'),
+    dark:gl.getUniformLocation(prog,'u_dark')
+  };
+
+  // palettes per theme (rgb 0..1)
+  const PAL={
+    light:{c1:[0.78,0.82,0.99],c2:[0.68,0.90,0.86],c3:[1.00,0.86,0.93],dark:0.0},
+    dark: {c1:[0.03,0.05,0.13],c2:[0.16,0.11,0.33],c3:[0.30,0.72,0.68],dark:1.0}
+  };
+
+  let cur={c1:PAL.light.c1.slice(),c2:PAL.light.c2.slice(),c3:PAL.light.c3.slice(),dark:0.0};
+  let target=cur;
+  function setThemePal(){
+    const t=document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';
+    target=PAL[t];
+  }
+  setThemePal();
+  // watch theme changes on <html data-theme>
+  new MutationObserver(setThemePal).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+  const mouse={x:0.5,y:0.5};
+  window.addEventListener('pointermove',e=>{mouse.x=e.clientX/window.innerWidth;mouse.y=1.0-e.clientY/window.innerHeight;},{passive:true});
+
+  function resize(){
+    const dpr=Math.min(window.devicePixelRatio||1,1.75);
+    const w=Math.floor(window.innerWidth*dpr), h=Math.floor(window.innerHeight*dpr);
+    if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);}
+  }
+  window.addEventListener('resize',resize);
+  resize();
+
+  document.body.classList.add('gl-on');
+
+  let running=true, start=performance.now();
+  document.addEventListener('visibilitychange',()=>{running=!document.hidden; if(running){start=performance.now()-elapsed*1000; requestAnimationFrame(frame);}});
+  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();running=false;document.body.classList.remove('gl-on');});
+
+  let elapsed=0;
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function frame(now){
+    if(!running)return;
+    elapsed=(now-start)/1000;
+    // ease palette toward theme target for a smooth dark/light transition
+    for(let i=0;i<3;i++){cur.c1[i]=lerp(cur.c1[i],target.c1[i],0.05);cur.c2[i]=lerp(cur.c2[i],target.c2[i],0.05);cur.c3[i]=lerp(cur.c3[i],target.c3[i],0.05);}
+    cur.dark=lerp(cur.dark,target.dark,0.05);
+    gl.uniform2f(U.res,canvas.width,canvas.height);
+    gl.uniform1f(U.time,elapsed);
+    gl.uniform2f(U.mouse,mouse.x,mouse.y);
+    gl.uniform3fv(U.c1,cur.c1);
+    gl.uniform3fv(U.c2,cur.c2);
+    gl.uniform3fv(U.c3,cur.c3);
+    gl.uniform1f(U.dark,cur.dark);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    requestAnimationFrame(frame);
+  }
+  // respect reduced-motion: render one static frame instead of animating
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    cur=JSON.parse(JSON.stringify(target));
+    gl.uniform2f(U.res,canvas.width,canvas.height);gl.uniform1f(U.time,3.0);gl.uniform2f(U.mouse,0.5,0.5);
+    gl.uniform3fv(U.c1,cur.c1);gl.uniform3fv(U.c2,cur.c2);gl.uniform3fv(U.c3,cur.c3);gl.uniform1f(U.dark,cur.dark);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  }else{
+    requestAnimationFrame(frame);
+  }
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a19eafbbfba58def',t:'MTc4Mzg0NTAzMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1a04d99b8b990cd',t:'MTc4Mzg2MTk4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body></html>
